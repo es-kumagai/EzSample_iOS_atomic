@@ -17,6 +17,12 @@
 #import "EzSampleLong.h"
 #import "EzSampleClass.h"
 
+@interface EzSampleMenuViewController ()
+
+- (void)EzPushTestButton:(UIButton*)button withTestInstance:(id<EzSampleObjectProtocol>)testInstance;
+
+@end
+
 @implementation EzSampleMenuViewController
 
 - (void)setMenuButtonsEnabled:(NSNumber*)menuButtonsEnabled
@@ -34,60 +40,52 @@
 	return [[NSNumber alloc] initWithBool:((UIButton*)self.menuButtons[0]).enabled];
 }
 
-- (IBAction)pushTestButtonForClassInstanceWithPropertyAtomicityBySynthesize
+- (void)EzPushTestButton:(UIButton *)button withTestInstance:(id<EzSampleObjectProtocol>)testInstance
 {
-	id<EzSampleObjectProtocol> instance = [[EzSampleClass alloc] init];
+	EzPostClear;
+	EzPostLog([button titleForState:UIControlStateNormal]);
 	
-	[self.delegate EzSampleMenuViewController:self testButtonForTestInstancePushed:instance];
+	[self.delegate EzSampleMenuViewController:self testButtonForTestInstancePushed:testInstance];
 }
 
-- (IBAction)pushTestButtonForLongWithPropertyAtomicityBySynthesize
+- (IBAction)pushTestButtonForClassInstanceWithPropertyAtomicityBySynthesize:(UIButton*)sender
 {
-	id<EzSampleObjectProtocol> instance = [[EzSampleLong alloc] init];
-	
-	[self.delegate EzSampleMenuViewController:self testButtonForTestInstancePushed:instance];
+	[self EzPushTestButton:sender withTestInstance:[[EzSampleClass alloc] init]];
 }
 
-- (IBAction)pushTestButtonForLongLongWithPropertyAtomicityBySynthesizeButOverrideGetterWithoutAtomicity
+- (IBAction)pushTestButtonForLongWithPropertyAtomicityBySynthesize:(UIButton*)sender
 {
-	id<EzSampleObjectProtocol> instance = [[EzSampleLongLongOverrideAtomicGetter alloc] init];
-	
-	[self.delegate EzSampleMenuViewController:self testButtonForTestInstancePushed:instance];
+	[self EzPushTestButton:sender withTestInstance:[[EzSampleLong alloc] init]];
 }
 
-- (IBAction)pushTestButtonForLongLongWithPropertyAtomicityBySynthesize
+- (IBAction)pushTestButtonForLongLongWithPropertyAtomicityBySynthesizeButOverrideGetterWithoutAtomicity:(UIButton*)sender
 {
-	id<EzSampleObjectProtocol> instance = [[EzSampleLongLong alloc] init];
-	
-	[self.delegate EzSampleMenuViewController:self testButtonForTestInstancePushed:instance];
+	[self EzPushTestButton:sender withTestInstance:[[EzSampleLongLongOverrideAtomicGetter alloc] init]];
 }
 
-- (IBAction)pushTestButtonForStructWithPropertyAtomicityBySynthesize
+- (IBAction)pushTestButtonForLongLongWithPropertyAtomicityBySynthesize:(UIButton*)sender
 {
-	id<EzSampleObjectProtocol> instance = [[EzSampleObject alloc] init];
-	
-	[self.delegate EzSampleMenuViewController:self testButtonForTestInstancePushed:instance];
+	[self EzPushTestButton:sender withTestInstance:[[EzSampleLongLong alloc] init]];
 }
 
-- (IBAction)pushTestButtonForStructWithPropertyAtomicityByCustomImplementWithNoSynchronized:(id)sender
+- (IBAction)pushTestButtonForStructWithPropertyAtomicityBySynthesize:(UIButton*)sender
 {
-	id<EzSampleObjectProtocol> instance = [[EzSampleObjectCustomProperties alloc] init];
-	
-	[self.delegate EzSampleMenuViewController:self testButtonForTestInstancePushed:instance];
+	[self EzPushTestButton:sender withTestInstance:[[EzSampleObject alloc] init]];
 }
 
-- (IBAction)pushTestButtonForStructWithSynchronizedSelf
+- (IBAction)pushTestButtonForStructWithPropertyAtomicityByCustomImplementWithNoSynchronized:(UIButton*)sender
 {
-	id<EzSampleObjectProtocol> instance = [[EzSampleObjectCustomPropertiesWithSynchronized alloc] init];
-	
-	[self.delegate EzSampleMenuViewController:self testButtonForTestInstancePushed:instance];
+	[self EzPushTestButton:sender withTestInstance:[[EzSampleObjectCustomProperties alloc] init]];
 }
 
-- (IBAction)pushTestButtonForStructWithAtomicityInGetterAndSynchronizedSelfInSetter
+- (IBAction)pushTestButtonForStructWithSynchronizedSelf:(UIButton*)sender
 {
-	id<EzSampleObjectProtocol> instance = [[EzSampleObjectCustomPropertiesWithAtomicAndSynchronized alloc] init];
-	
-	[self.delegate EzSampleMenuViewController:self testButtonForTestInstancePushed:instance];
+	[self EzPushTestButton:sender withTestInstance:[[EzSampleObjectCustomPropertiesWithSynchronized alloc] init]];
+}
+
+- (IBAction)pushTestButtonForStructWithAtomicityInGetterAndSynchronizedSelfInSetter:(UIButton*)sender
+{
+	[self EzPushTestButton:sender withTestInstance:[[EzSampleObjectCustomPropertiesWithAtomicAndSynchronized alloc] init]];
 }
 
 @end

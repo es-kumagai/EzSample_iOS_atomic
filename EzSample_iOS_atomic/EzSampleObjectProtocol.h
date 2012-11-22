@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define EzPostClear [[NSNotificationCenter defaultCenter] postNotificationName:@"CLEAR" object:nil]
+#define EzPostMark EzPostLog(@"------------")
 #define EzPostLog(message,...) [[NSNotificationCenter defaultCenter] postNotificationName:@"LOG" object:[[NSString alloc] initWithFormat:message, ##__VA_ARGS__]]
 #define EzPostReport(message,...) [[NSNotificationCenter defaultCenter] postNotificationName:@"REPORT" object:[[NSString alloc] initWithFormat:message, ##__VA_ARGS__]]
 #define EzPostProgress(value) [[NSNotificationCenter defaultCenter] postNotificationName:@"PROGRESS" object:[[NSNumber alloc] initWithInt:value]]

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#define EzSampleViewControllerTestStep 250
+#define EzSampleViewControllerTestStep 10000
 
 @interface EzSampleViewController : UIViewController
 

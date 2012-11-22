@@ -61,16 +61,22 @@
 {
 	BOOL threadSafe = (value.a == value.b);
 	
-	EzPostLog(@"[%@] ** %@ ** : %d, %d", label, (threadSafe ? @"SAFE" : @"UNSAFE"), value.a, value.b);
+	EzPostLog(@"%-15s : %2s (%d,%d)", label.UTF8String, (threadSafe ? "OK" : "NG"), value.a, value.b);
 	
 	return threadSafe;
 }
 
 - (void)outputLoopCount
 {
-	EzPostReport(@"Count of executed by non-atomic = %d (thread-safe=%@)", self.loopCountOfValueForReplaceByNonAtomic, (self.inconsistentReplaceByNonAtomic ? @"NO" : @"YES"));
-	EzPostReport(@"Count of executed by atomic = %d (thread-safe=%@)", self.loopCountOfValueForReplaceByAtomic, (self.inconsistentReplaceByAtomic ? @"NO" : @"YES"));
-	EzPostReport(@"Count of executed by atomic read and non-atomic write = %d (thread-safe=%@)", self.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite, (self.inconsistentReplaceByAtomicReadAndNonAtomicWrite ? @"NO" : @"YES"));
+	NSNumberFormatter* formatter = [[NSNumberFormatter alloc] init];
+	
+	formatter.numberStyle = NSNumberFormatterDecimalStyle;
+	formatter.groupingSeparator = @",";
+	formatter.groupingSize = 3;
+	
+	EzPostReport(@"ATOMIC          : %12s times (%@)", [formatter stringFromNumber:[[NSNumber alloc] initWithInt:self.loopCountOfValueForReplaceByAtomic]].UTF8String, (self.inconsistentReplaceByAtomic ? @"UNSAFE" : @"SAFE ?"));
+	EzPostReport(@"NONATOMIC       : %12s times (%@)", [formatter stringFromNumber:[[NSNumber alloc] initWithInt:self.loopCountOfValueForReplaceByNonAtomic]].UTF8String, (self.inconsistentReplaceByNonAtomic ? @"UNSAFE" : @"SAFE ?"));
+	EzPostReport(@"R:ATOM-W:DIRECT : %12s times (%@)", [formatter stringFromNumber:[[NSNumber alloc] initWithInt:self.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite]].UTF8String, (self.inconsistentReplaceByAtomicReadAndNonAtomicWrite ? @"UNSAFE" : @"SAFE ?"));
 }
 
 - (void)start
@@ -93,9 +99,11 @@
 
 - (void)outputWithLabel:(NSString *)label
 {
-	NSString* labelForAtomic = [[NSString alloc] initWithFormat:@"%@-ATOMIC", label];
-	NSString* labelForNonAtomic = [[NSString alloc] initWithFormat:@"%@-NONATOMIC", label];
-	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"%@-(R)ATOMIC-(W)NONATOMIC", label];
+	NSString* labelForAtomic = [[NSString alloc] initWithFormat:@"%@ATOMIC", label];
+	NSString* labelForNonAtomic = [[NSString alloc] initWithFormat:@"%@NONATOMIC", label];
+	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"%@R:ATOM-W:DIRECT", label];
+	
+	EzPostLog(@"");
 	
 	if (![self outputStructState:self.valueForReplaceByAtomic withLabel:labelForAtomic]) self.inconsistentReplaceByAtomic = YES;
 	if (![self outputStructState:self.valueForReplaceByNonAtomic withLabel:labelForNonAtomic]) self.inconsistentReplaceByNonAtomic = YES;

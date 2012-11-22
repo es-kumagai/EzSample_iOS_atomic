@@ -13,25 +13,25 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <progressView opaque="NO" contentMode="scaleToFill" id="WBk-9E-orD">
-                                <rect key="frame" x="7" y="174" width="306" height="9"/>
+                                <rect key="frame" x="7" y="221" width="306" height="9"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </progressView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="LOG" id="Xjk-QM-dB6">
-                                <rect key="frame" x="0.0" y="191" width="320" height="283"/>
+                                <rect key="frame" x="0.0" y="238" width="320" height="213"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="11"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="REPORT" id="YsL-gJ-Sjp">
-                                <rect key="frame" x="0.0" y="482" width="320" height="66"/>
+                                <rect key="frame" x="0.0" y="459" width="320" height="89"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" red="1" green="0.83542859550000004" blue="0.8969315886" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="11"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="Rsj-gD-Yp4">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="166"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="213"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.81213504079999999" green="0.86140704150000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </scrollView>
@@ -68,7 +68,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pushTestButtonForStructWithPropertyAtomicityBySynthesize" destination="eZJ-7v-p1W" eventType="touchUpInside" id="Lzf-Gd-bkF"/>
+                                    <action selector="pushTestButtonForStructWithPropertyAtomicityBySynthesize:" destination="eZJ-7v-p1W" eventType="touchUpInside" id="FoB-yi-Di9"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="DDd-10-gDG">
@@ -83,7 +83,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pushTestButtonForLongLongWithPropertyAtomicityBySynthesize" destination="eZJ-7v-p1W" eventType="touchUpInside" id="YzW-7f-lIm"/>
+                                    <action selector="pushTestButtonForLongLongWithPropertyAtomicityBySynthesize:" destination="eZJ-7v-p1W" eventType="touchUpInside" id="RUo-SQ-0Z6"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="GAh-oM-t7X">
@@ -98,7 +98,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pushTestButtonForLongWithPropertyAtomicityBySynthesize" destination="eZJ-7v-p1W" eventType="touchUpInside" id="3vO-Mo-irA"/>
+                                    <action selector="pushTestButtonForLongWithPropertyAtomicityBySynthesize:" destination="eZJ-7v-p1W" eventType="touchUpInside" id="m3n-ZA-meg"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="yQu-ZA-yBV">
@@ -113,7 +113,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pushTestButtonForClassInstanceWithPropertyAtomicityBySynthesize" destination="eZJ-7v-p1W" eventType="touchUpInside" id="LTl-iD-kpM"/>
+                                    <action selector="pushTestButtonForClassInstanceWithPropertyAtomicityBySynthesize:" destination="eZJ-7v-p1W" eventType="touchUpInside" id="Umx-bJ-d79"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="eZt-ga-xlh">
@@ -128,7 +128,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pushTestButtonForLongLongWithPropertyAtomicityBySynthesizeButOverrideGetterWithoutAtomicity" destination="eZJ-7v-p1W" eventType="touchUpInside" id="xu3-Zn-3PX"/>
+                                    <action selector="pushTestButtonForLongLongWithPropertyAtomicityBySynthesizeButOverrideGetterWithoutAtomicity:" destination="eZJ-7v-p1W" eventType="touchUpInside" id="Pgg-Pm-gML"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="4el-fo-S2a">
@@ -158,7 +158,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pushTestButtonForStructWithSynchronizedSelf" destination="eZJ-7v-p1W" eventType="touchUpInside" id="zsP-94-Zl3"/>
+                                    <action selector="pushTestButtonForStructWithSynchronizedSelf:" destination="eZJ-7v-p1W" eventType="touchUpInside" id="Ste-9l-K6N"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="xsW-Jg-ahw">
@@ -173,7 +173,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pushTestButtonForStructWithAtomicityInGetterAndSynchronizedSelfInSetter" destination="eZJ-7v-p1W" eventType="touchUpInside" id="mDN-3k-RZ1"/>
+                                    <action selector="pushTestButtonForStructWithAtomicityInGetterAndSynchronizedSelfInSetter:" destination="eZJ-7v-p1W" eventType="touchUpInside" id="4id-g7-oj6"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -196,14 +196,14 @@
         <class className="EzSampleMenuViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EzSampleMenuViewController.h"/>
             <relationships>
-                <relationship kind="action" name="pushTestButtonForClassInstanceWithPropertyAtomicityBySynthesize"/>
-                <relationship kind="action" name="pushTestButtonForLongLongWithPropertyAtomicityBySynthesize"/>
-                <relationship kind="action" name="pushTestButtonForLongLongWithPropertyAtomicityBySynthesizeButOverrideGetterWithoutAtomicity"/>
-                <relationship kind="action" name="pushTestButtonForLongWithPropertyAtomicityBySynthesize"/>
-                <relationship kind="action" name="pushTestButtonForStructWithAtomicityInGetterAndSynchronizedSelfInSetter"/>
+                <relationship kind="action" name="pushTestButtonForClassInstanceWithPropertyAtomicityBySynthesize:" candidateClass="UIButton"/>
+                <relationship kind="action" name="pushTestButtonForLongLongWithPropertyAtomicityBySynthesize:" candidateClass="UIButton"/>
+                <relationship kind="action" name="pushTestButtonForLongLongWithPropertyAtomicityBySynthesizeButOverrideGetterWithoutAtomicity:" candidateClass="UIButton"/>
+                <relationship kind="action" name="pushTestButtonForLongWithPropertyAtomicityBySynthesize:" candidateClass="UIButton"/>
+                <relationship kind="action" name="pushTestButtonForStructWithAtomicityInGetterAndSynchronizedSelfInSetter:" candidateClass="UIButton"/>
                 <relationship kind="action" name="pushTestButtonForStructWithPropertyAtomicityByCustomImplementWithNoSynchronized:"/>
-                <relationship kind="action" name="pushTestButtonForStructWithPropertyAtomicityBySynthesize"/>
-                <relationship kind="action" name="pushTestButtonForStructWithSynchronizedSelf"/>
+                <relationship kind="action" name="pushTestButtonForStructWithPropertyAtomicityBySynthesize:" candidateClass="UIButton"/>
+                <relationship kind="action" name="pushTestButtonForStructWithSynchronizedSelf:" candidateClass="UIButton"/>
                 <relationship kind="outletCollection" name="menuButtons" candidateClass="UIButton"/>
             </relationships>
         </class>

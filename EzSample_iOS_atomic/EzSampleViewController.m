@@ -15,19 +15,27 @@
 - (void)EzCheckDone:(id<EzSampleObjectProtocol>)object;
 
 - (void)EzPostProgressNotification:(NSNotification*)notification;
+- (void)EzPostClearNotification:(NSNotification*)notification;
 - (void)EzPostLogNotification:(NSNotification*)notification;
 - (void)EzPostReportNotification:(NSNotification*)notification;
+
+- (void)EzUpdateLogThread:(id)object;
+- (void)EzUpdateLog:(NSNumber*)boolFull;
 
 @end
 
 @implementation EzSampleViewController
 {
 	__strong EzSampleMenuViewController* _menuViewContrller;
+	__strong NSMutableArray* _logBuffer;
+	__strong NSThread* _updateLogThread;
 }
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	
+	_logBuffer = [[NSMutableArray alloc] init];
 	
 	[self clearOutputs];
 	
@@ -48,6 +56,8 @@
 	[_menuViewContrller removeFromParentViewController];
 	
 	_menuViewContrller = nil;
+	
+	_logBuffer = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -56,6 +66,7 @@
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(EzPostProgressNotification:) name:@"PROGRESS" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(EzPostLogNotification:) name:@"LOG" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(EzPostClearNotification:) name:@"CLEAR" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(EzPostReportNotification:) name:@"REPORT" object:nil];
 }
 
@@ -68,9 +79,23 @@
 
 - (void)clearOutputs
 {
+	[_logBuffer removeAllObjects];
+	
 	self.logTextView.text = @"";
 	self.reportTextView.text = @"";
 	self.progressView.progress = 0.0;
+}
+
+- (void)EzPostClearNotification:(NSNotification *)notification
+{
+	if ([NSThread isMainThread])
+	{
+		[self clearOutputs];
+	}
+	else
+	{
+		[self performSelectorOnMainThread:@selector(clearOutputs) withObject:nil waitUntilDone:NO];
+	}
 }
 
 - (void)EzPostProgressNotification:(NSNotification *)notification
@@ -81,7 +106,7 @@
 	}
 	else
 	{
-		[self performSelectorOnMainThread:@selector(EzPostProgressNotification:) withObject:notification waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(EzPostProgressNotification:) withObject:notification waitUntilDone:NO];
 	}
 }
 
@@ -89,11 +114,11 @@
 {
 	if ([NSThread isMainThread])
 	{
-		self.logTextView.text = [[NSString alloc] initWithFormat:@"%@\n%@", notification.object, self.logTextView.text];
+		[_logBuffer addObject:notification.object];
 	}
 	else
 	{
-		[self performSelectorOnMainThread:@selector(EzPostLogNotification:) withObject:notification waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(EzPostLogNotification:) withObject:notification waitUntilDone:NO];
 	}
 }
 
@@ -105,19 +130,69 @@
 	}
 	else
 	{
-		[self performSelectorOnMainThread:@selector(EzPostReportNotification:) withObject:notification waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(EzPostReportNotification:) withObject:notification waitUntilDone:NO];
 	}
+}
+
+- (void)EzUpdateLogThread:(id)object
+{
+	NSThread* currentThread = [NSThread currentThread];
+	
+	while (!currentThread.isCancelled)
+	{
+		[self performSelectorOnMainThread:@selector(EzUpdateLog:) withObject:nil waitUntilDone:YES];
+		
+		[NSThread sleepForTimeInterval:0.25];
+	}
+	
+	// キャンセル直後にもう一度、新着ログを表示しておきます。
+	[self performSelectorOnMainThread:@selector(EzUpdateLog:) withObject:nil waitUntilDone:YES];
+	
+	_updateLogThread = nil;
+	
+	[NSThread exit];
+}
+
+- (void)EzUpdateLog:(NSNumber *)boolFull
+{
+	NSString* text;
+	
+	if (boolFull.boolValue)
+	{
+		NSArray* logs = [[_logBuffer reverseObjectEnumerator] allObjects];
+		
+		text = [logs componentsJoinedByString:@"\n"];
+	}
+	else
+	{
+		NSUInteger limit = 30;
+	
+		text = @"";
+		
+		for (NSString* log in _logBuffer.reverseObjectEnumerator)
+		{
+			text = [text stringByAppendingFormat:@"%@\n", log];
+			
+			if (--limit == 0)
+			{
+				break;
+			}
+		}
+	}
+	
+	self.logTextView.text = text;
 }
 
 - (void)EzSampleMenuViewController:(EzSampleMenuViewController *)menuViewController testButtonForTestInstancePushed:(id<EzSampleObjectProtocol>)testInstance
 {
-	[self clearOutputs];
-	
 	_menuViewContrller.menuButtonsEnabled = [[NSNumber alloc] initWithBool:NO];
-	
+	self.logTextView.scrollEnabled = NO;
+
 	EzPostLog(@"Testing thread-safe %d times.", EzSampleViewControllerTestStep);
+	EzPostLog(@"");
 	EzPostLog(@"Data size: void=%lu, long=%lu, int=%lu, long long=%lu", sizeof(void), sizeof(long), sizeof(int), sizeof(long long));
-		
+	EzPostMark;
+	
 	[testInstance start];
 	
 	[self performSelectorInBackground:@selector(EzCheck:) withObject:testInstance];
@@ -127,36 +202,58 @@
 {
 	NSUInteger step = EzSampleViewControllerTestStep;
 	
-	[NSThread sleepForTimeInterval:2.0];
+	_updateLogThread = [[NSThread alloc] initWithTarget:self selector:@selector(EzUpdateLogThread:) object:nil];
+	
+	[_updateLogThread start];
+	
+	[NSThread sleepForTimeInterval:2.5];
 	
 	@try
 	{
 		while (step--)
 		{
-			EzPostProgress(EzSampleViewControllerTestStep - step);
+			if (step % 100 == 0)
+			{
+				EzPostProgress(EzSampleViewControllerTestStep - step);
+			}
 			
-			[testInstance outputWithLabel:@"CHECK"];
+			[testInstance outputWithLabel:@""];
 		}
+		
+		EzPostMark;
+		EzPostLog(@"This check has been finished successfully.");
 	}
 	@catch (NSException* exception)
 	{
+		EzPostMark;
 		EzPostLog(@"The check thread aborted because %@.", exception.reason);
 	}
-	@finally
-	{
-		[self EzCheckDone:testInstance];
-	}
+
+	// 終了処理に時間がかかることを伝えます。
+	EzPostLog(@"");
+	EzPostLog(@"Please wait, Report making now ...");
+	
+	// 直前に送信したログが反映される余地を与えます。
+	[NSThread sleepForTimeInterval:1.0];
+			
+	// ログの更新処理を終了します。
+	[_updateLogThread cancel];
+	
+	// チェック完了処理を行います。
+	[self performSelectorOnMainThread:@selector(EzCheckDone:) withObject:testInstance waitUntilDone:NO];
 }
 
 - (void)EzCheckDone:(id<EzSampleObjectProtocol>)testInstance
 {
 	[testInstance stop];
+
+	[_logBuffer addObject:@"Done."];
 	
-	[NSThread sleepForTimeInterval:1.0];
-	
+	[self EzUpdateLog:[[NSNumber alloc] initWithBool:YES]];
 	[testInstance outputLoopCount];
 
-	[_menuViewContrller performSelectorOnMainThread:@selector(setMenuButtonsEnabled:) withObject:[[NSNumber alloc] initWithBool:YES] waitUntilDone:NO];
+	self.logTextView.scrollEnabled = YES;
+	_menuViewContrller.menuButtonsEnabled = [[NSNumber alloc] initWithBool:YES];
 }
 
 @end

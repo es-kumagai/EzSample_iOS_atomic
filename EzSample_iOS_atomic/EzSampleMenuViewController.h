@@ -16,13 +16,13 @@
 
 @property (nonatomic,readwrite,weak) id<EzSampleMenuViewControllerDelegate> delegate;
 
-- (IBAction)pushTestButtonForStructWithPropertyAtomicityBySynthesize;
+- (IBAction)pushTestButtonForStructWithPropertyAtomicityBySynthesize:(UIButton*)sender;
 - (IBAction)pushTestButtonForStructWithPropertyAtomicityByCustomImplementWithNoSynchronized:(id)sender;
-- (IBAction)pushTestButtonForStructWithSynchronizedSelf;
-- (IBAction)pushTestButtonForStructWithAtomicityInGetterAndSynchronizedSelfInSetter;
-- (IBAction)pushTestButtonForLongLongWithPropertyAtomicityBySynthesize;
-- (IBAction)pushTestButtonForLongLongWithPropertyAtomicityBySynthesizeButOverrideGetterWithoutAtomicity;
-- (IBAction)pushTestButtonForLongWithPropertyAtomicityBySynthesize;
-- (IBAction)pushTestButtonForClassInstanceWithPropertyAtomicityBySynthesize;
+- (IBAction)pushTestButtonForStructWithSynchronizedSelf:(UIButton*)sender;
+- (IBAction)pushTestButtonForStructWithAtomicityInGetterAndSynchronizedSelfInSetter:(UIButton*)sender;
+- (IBAction)pushTestButtonForLongLongWithPropertyAtomicityBySynthesize:(UIButton*)sender;
+- (IBAction)pushTestButtonForLongLongWithPropertyAtomicityBySynthesizeButOverrideGetterWithoutAtomicity:(UIButton*)sender;
+- (IBAction)pushTestButtonForLongWithPropertyAtomicityBySynthesize:(UIButton*)sender;
+- (IBAction)pushTestButtonForClassInstanceWithPropertyAtomicityBySynthesize:(UIButton*)sender;
 
 @end
