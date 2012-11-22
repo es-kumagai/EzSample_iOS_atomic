@@ -7,61 +7,156 @@
 //
 
 #import "EzSampleViewController.h"
-#import "EzSampleObject.h"
+#import "EzSampleMenuViewController.h"
 
-@interface EzSampleViewController ()
+@interface EzSampleViewController () <EzSampleMenuViewControllerDelegate>
 
-- (void)EzCheck:(EzSampleObject*)object;
-- (void)EzCheckDone:(EzSampleObject*)object;
+- (void)EzCheck:(id<EzSampleObjectProtocol>)object;
+- (void)EzCheckDone:(id<EzSampleObjectProtocol>)object;
+
+- (void)EzPostProgressNotification:(NSNotification*)notification;
+- (void)EzPostLogNotification:(NSNotification*)notification;
+- (void)EzPostReportNotification:(NSNotification*)notification;
 
 @end
 
 @implementation EzSampleViewController
+{
+	__strong EzSampleMenuViewController* _menuViewContrller;
+}
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+	[super viewDidLoad];
+	
+	[self clearOutputs];
+	
+	_menuViewContrller = [self.storyboard instantiateViewControllerWithIdentifier:@"MENU"];
+	_menuViewContrller.delegate = self;
+	
+	self.menuScrollView.contentSize = _menuViewContrller.view.frame.size;
+	
+	[self addChildViewController:_menuViewContrller];
+	[self.menuScrollView addSubview:_menuViewContrller.view];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)viewDidUnload
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+	[super viewDidUnload];
+	
+	[_menuViewContrller.view removeFromSuperview];
+	[_menuViewContrller removeFromParentViewController];
+	
+	_menuViewContrller = nil;
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-	EzSampleObject* object = [[EzSampleObject alloc] init];
+	[super viewWillAppear:animated];
 	
-	[object start];
-	
-	[self performSelectorInBackground:@selector(EzCheck:) withObject:object];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(EzPostProgressNotification:) name:@"PROGRESS" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(EzPostLogNotification:) name:@"LOG" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(EzPostReportNotification:) name:@"REPORT" object:nil];
 }
 
-- (void)EzCheck:(EzSampleObject *)object
+- (void)viewDidDisappear:(BOOL)animated
 {
-	NSUInteger step = 10000;
+	[super viewDidDisappear:animated];
 	
-	while (step--)
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)clearOutputs
+{
+	self.logTextView.text = @"";
+	self.reportTextView.text = @"";
+	self.progressView.progress = 0.0;
+}
+
+- (void)EzPostProgressNotification:(NSNotification *)notification
+{
+	if ([NSThread isMainThread])
 	{
-		[EzSampleObject outputStructState:object.valueForReplaceByAtomic withLabel:@"CHECK-ATOMIC"];
-		[EzSampleObject outputStructState:object.valueForReplaceByNonAtomic withLabel:@"CHECK-NONATOMIC"];
-		[EzSampleObject outputStructState:object.valueForReplaceByAtomicReadAndNonAtomicWrite withLabel:@"CHECK-(R)ATOMIC-(W)NONATOMIC"];
+		self.progressView.progress = (float)(((NSNumber*)notification.object).intValue) / (float)EzSampleViewControllerTestStep;
 	}
-	
-	[self EzCheckDone:object];
+	else
+	{
+		[self performSelectorOnMainThread:@selector(EzPostProgressNotification:) withObject:notification waitUntilDone:YES];
+	}
 }
 
-- (void)EzCheckDone:(EzSampleObject *)object
+- (void)EzPostLogNotification:(NSNotification *)notification
 {
-	[object stop];
+	if ([NSThread isMainThread])
+	{
+		self.logTextView.text = [[NSString alloc] initWithFormat:@"%@\n%@", notification.object, self.logTextView.text];
+	}
+	else
+	{
+		[self performSelectorOnMainThread:@selector(EzPostLogNotification:) withObject:notification waitUntilDone:YES];
+	}
+}
+
+- (void)EzPostReportNotification:(NSNotification *)notification
+{
+	if ([NSThread isMainThread])
+	{
+		self.reportTextView.text = [[NSString alloc] initWithFormat:@"%@\n%@", self.reportTextView.text, notification.object];
+	}
+	else
+	{
+		[self performSelectorOnMainThread:@selector(EzPostReportNotification:) withObject:notification waitUntilDone:YES];
+	}
+}
+
+- (void)EzSampleMenuViewController:(EzSampleMenuViewController *)menuViewController testButtonForTestInstancePushed:(id<EzSampleObjectProtocol>)testInstance
+{
+	[self clearOutputs];
+	
+	_menuViewContrller.menuButtonsEnabled = [[NSNumber alloc] initWithBool:NO];
+	
+	EzPostLog(@"Testing thread-safe %d times.", EzSampleViewControllerTestStep);
+	EzPostLog(@"Data size: void=%lu, long=%lu, int=%lu, long long=%lu", sizeof(void), sizeof(long), sizeof(int), sizeof(long long));
+		
+	[testInstance start];
+	
+	[self performSelectorInBackground:@selector(EzCheck:) withObject:testInstance];
+}
+
+- (void)EzCheck:(id<EzSampleObjectProtocol>)testInstance
+{
+	NSUInteger step = EzSampleViewControllerTestStep;
+	
+	[NSThread sleepForTimeInterval:2.0];
+	
+	@try
+	{
+		while (step--)
+		{
+			EzPostProgress(EzSampleViewControllerTestStep - step);
+			
+			[testInstance outputWithLabel:@"CHECK"];
+		}
+	}
+	@catch (NSException* exception)
+	{
+		EzPostLog(@"The check thread aborted because %@.", exception.reason);
+	}
+	@finally
+	{
+		[self EzCheckDone:testInstance];
+	}
+}
+
+- (void)EzCheckDone:(id<EzSampleObjectProtocol>)testInstance
+{
+	[testInstance stop];
 	
 	[NSThread sleepForTimeInterval:1.0];
 	
-	NSLog(@"loopCountOfValueForReplaceByNonAtomic = %d", object.loopCountOfValueForReplaceByNonAtomic);
-	NSLog(@"loopCountOfValueForReplaceByAtomic = %d", object.loopCountOfValueForReplaceByAtomic);
-	NSLog(@"loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite = %d", object.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite);
+	[testInstance outputLoopCount];
+
+	[_menuViewContrller performSelectorOnMainThread:@selector(setMenuButtonsEnabled:) withObject:[[NSNumber alloc] initWithBool:YES] waitUntilDone:NO];
 }
 
 @end

@@ -1,14 +1,14 @@
 //
-//  EzSampleObject.m
+//  EzSampleObjectCustomProperties.m
 //  EzSample_iOS_atomic
 //
 //  Created by 熊谷 友宏 on H.24/11/21.
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObject.h"
+#import "EzSampleObjectCustomProperties.h"
 
-@interface EzSampleObject ()
+@interface EzSampleObjectCustomProperties ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,15 +16,42 @@
 
 @end
 
-@implementation EzSampleObject
+@implementation EzSampleObjectCustomProperties
 
-@synthesize valueForReplaceByAtomicReadAndNonAtomicWrite = _valueForReplaceByAtomicReadAndNonAtomicWrite;
+- (void)setValueForReplaceByAtomic:(struct EzSampleObjectStructValue)valueForReplaceByAtomic
+{
+	_valueForReplaceByAtomic = valueForReplaceByAtomic;
+}
 
+- (void)setValueForReplaceByNonAtomic:(struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
+{
+	_valueForReplaceByNonAtomic = valueForReplaceByNonAtomic;
+}
+
+- (void)setValueForReplaceByAtomicReadAndNonAtomicWrite:(struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
+{
+	_valueForReplaceByAtomicReadAndNonAtomicWrite = valueForReplaceByAtomicReadAndNonAtomicWrite;
+}
+
+- (struct EzSampleObjectStructValue)valueForReplaceByAtomic
+{
+	return _valueForReplaceByAtomic;
+}
+
+- (struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
+{
+	return _valueForReplaceByNonAtomic;
+}
+
+- (struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
+{
+	return _valueForReplaceByAtomicReadAndNonAtomicWrite;
+}
 
 - (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
 {
 	BOOL threadSafe = (value.a == value.b);
-
+	
 	EzPostLog(@"[%@] ** %@ ** : %d, %d", label, (threadSafe ? @"SAFE" : @"UNSAFE"), value.a, value.b);
 	
 	return threadSafe;
@@ -42,7 +69,7 @@
 	_threadForValueForReplaceByNonAtomic = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByNonAtomic:) object:nil];
 	_threadForValueForReplaceByAtomic = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByAtomic:) object:nil];
 	_threadForValueForReplaceByAtomicReadAndNonAtomicWrite = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByAtomicReadAndNonAtomicWrite:) object:nil];
-
+	
 	[_threadForValueForReplaceByNonAtomic start];
 	[_threadForValueForReplaceByAtomic start];
 	[_threadForValueForReplaceByAtomicReadAndNonAtomicWrite start];

@@ -1,5 +1,5 @@
 //
-//  EzSampleObject.h
+//  EzSampleObjectCustomProperties.h
 //  EzSample_iOS_atomic
 //
 //  Created by 熊谷 友宏 on H.24/11/21.
@@ -9,18 +9,20 @@
 #import <Foundation/Foundation.h>
 #import "EzSampleObjectProtocol.h"
 
-@interface EzSampleObject : NSObject <EzSampleObjectProtocol>
+@interface EzSampleObjectCustomPropertiesWithAtomicAndSynchronized : NSObject <EzSampleObjectProtocol>
 {
-	struct EzSampleObjectStructValue _valueForReplaceByAtomicReadAndNonAtomicWrite;
-	
 	__strong NSThread* _threadForValueForReplaceByNonAtomic;
 	__strong NSThread* _threadForValueForReplaceByAtomic;
 	__strong NSThread* _threadForValueForReplaceByAtomicReadAndNonAtomicWrite;
 }
 
-@property (nonatomic,readwrite) struct EzSampleObjectStructValue valueForReplaceByNonAtomic;
-@property (atomic,readwrite) struct EzSampleObjectStructValue valueForReplaceByAtomic;
+@property (nonatomic,readonly) struct EzSampleObjectStructValue valueForReplaceByNonAtomic;
+@property (atomic,readonly) struct EzSampleObjectStructValue valueForReplaceByAtomic;
 @property (atomic,readonly) struct EzSampleObjectStructValue valueForReplaceByAtomicReadAndNonAtomicWrite;
+
+- (void)setValueForReplaceByAtomic:(struct EzSampleObjectStructValue)valueForReplaceByAtomic;
+- (void)setValueForReplaceByNonAtomic:(struct EzSampleObjectStructValue)valueForReplaceByNonAtomic;
+- (void)setValueForReplaceByAtomicReadAndNonAtomicWrite:(struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite;
 
 @property (nonatomic,readonly) int loopCountOfValueForReplaceByNonAtomic;
 @property (nonatomic,readonly) int loopCountOfValueForReplaceByAtomic;

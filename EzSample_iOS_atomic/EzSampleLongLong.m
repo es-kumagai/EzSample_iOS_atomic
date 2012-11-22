@@ -6,9 +6,9 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObject.h"
+#import "EzSampleLongLong.h"
 
-@interface EzSampleObject ()
+@interface EzSampleLongLong ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,16 +16,15 @@
 
 @end
 
-@implementation EzSampleObject
+@implementation EzSampleLongLong
 
-@synthesize valueForReplaceByAtomicReadAndNonAtomicWrite = _valueForReplaceByAtomicReadAndNonAtomicWrite;
+@synthesize valueForReplaceByAtomic = _valueForReplaceByAtomic;
 
-
-- (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
+- (BOOL)outputStructState:(long long)value withLabel:(NSString*)label
 {
-	BOOL threadSafe = (value.a == value.b);
-
-	EzPostLog(@"[%@] ** %@ ** : %d, %d", label, (threadSafe ? @"SAFE" : @"UNSAFE"), value.a, value.b);
+	BOOL threadSafe = (value == 1 || value == -1);
+	
+	EzPostLog(@"[%@] ** %@ ** : %lld", label, (threadSafe ? @"SAFE" : @"UNSAFE"), value);
 	
 	return threadSafe;
 }
@@ -74,10 +73,9 @@
 	{
 		_loopCountOfValueForReplaceByNonAtomic++;
 		
-		struct EzSampleObjectStructValue value = self.valueForReplaceByNonAtomic;
+		long long value = self.valueForReplaceByNonAtomic;
 		
-		value.a = _loopCountOfValueForReplaceByNonAtomic;
-		value.b = _loopCountOfValueForReplaceByNonAtomic;
+		value = (_loopCountOfValueForReplaceByNonAtomic % 2 == 0 ? 1 : -1);
 		
 		self.valueForReplaceByNonAtomic = value;
 	}
@@ -95,10 +93,9 @@
 	{
 		_loopCountOfValueForReplaceByAtomic++;
 		
-		struct EzSampleObjectStructValue value = self.valueForReplaceByAtomic;
+		long long value = self.valueForReplaceByAtomic;
 		
-		value.a = _loopCountOfValueForReplaceByAtomic;
-		value.b = _loopCountOfValueForReplaceByAtomic;
+		value = (_loopCountOfValueForReplaceByAtomic % 2 == 0 ? 1 : -1);
 		
 		self.valueForReplaceByAtomic = value;
 	}
@@ -116,10 +113,9 @@
 	{
 		_loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite++;
 		
-		struct EzSampleObjectStructValue value = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
+		long long value = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
 		
-		value.a = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
-		value.b = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
+		value = (_loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite % 2 == 0 ? 1 : -1);
 		
 		_valueForReplaceByAtomicReadAndNonAtomicWrite = value;
 	}

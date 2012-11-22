@@ -6,9 +6,9 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObject.h"
+#import "EzSampleClass.h"
 
-@interface EzSampleObject ()
+@interface EzSampleClass ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,16 +16,27 @@
 
 @end
 
-@implementation EzSampleObject
+@implementation EzSampleClass
 
-@synthesize valueForReplaceByAtomicReadAndNonAtomicWrite = _valueForReplaceByAtomicReadAndNonAtomicWrite;
-
-
-- (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
+- (id)init
 {
-	BOOL threadSafe = (value.a == value.b);
+	self = [super init];
+	
+	if (self)
+	{
+		_valueForReplaceByAtomic = [[EzSampleObjectClassValue alloc] initWithLabel:@"ATOMIC"];
+		_valueForReplaceByNonAtomic = [[EzSampleObjectClassValue alloc] initWithLabel:@"NONATOMIC"];
+		_valueForReplaceByAtomicReadAndNonAtomicWrite = [[EzSampleObjectClassValue alloc] initWithLabel:@"(R)ATOMIC-(W)NONATOMIC"];
+	}
+	
+	return self;
+}
 
-	EzPostLog(@"[%@] ** %@ ** : %d, %d", label, (threadSafe ? @"SAFE" : @"UNSAFE"), value.a, value.b);
+- (BOOL)outputStructState:(EzSampleObjectClassValue*)value withLabel:(NSString*)label
+{
+	BOOL threadSafe = (value->a == value->b);
+	
+	EzPostLog(@"[%@] ** %@ ** : %d, %d", label, (threadSafe ? @"SAFE" : @"UNSAFE"), value->a, value->b);
 	
 	return threadSafe;
 }
@@ -42,7 +53,7 @@
 	_threadForValueForReplaceByNonAtomic = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByNonAtomic:) object:nil];
 	_threadForValueForReplaceByAtomic = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByAtomic:) object:nil];
 	_threadForValueForReplaceByAtomicReadAndNonAtomicWrite = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByAtomicReadAndNonAtomicWrite:) object:nil];
-
+	
 	[_threadForValueForReplaceByNonAtomic start];
 	[_threadForValueForReplaceByAtomic start];
 	[_threadForValueForReplaceByAtomicReadAndNonAtomicWrite start];
@@ -74,10 +85,10 @@
 	{
 		_loopCountOfValueForReplaceByNonAtomic++;
 		
-		struct EzSampleObjectStructValue value = self.valueForReplaceByNonAtomic;
+		EzSampleObjectClassValue* value = self.valueForReplaceByNonAtomic;
 		
-		value.a = _loopCountOfValueForReplaceByNonAtomic;
-		value.b = _loopCountOfValueForReplaceByNonAtomic;
+		value->a = _loopCountOfValueForReplaceByNonAtomic;
+		value->b = _loopCountOfValueForReplaceByNonAtomic;
 		
 		self.valueForReplaceByNonAtomic = value;
 	}
@@ -95,10 +106,10 @@
 	{
 		_loopCountOfValueForReplaceByAtomic++;
 		
-		struct EzSampleObjectStructValue value = self.valueForReplaceByAtomic;
+		EzSampleObjectClassValue* value = self.valueForReplaceByAtomic;
 		
-		value.a = _loopCountOfValueForReplaceByAtomic;
-		value.b = _loopCountOfValueForReplaceByAtomic;
+		value->a = _loopCountOfValueForReplaceByAtomic;
+		value->b = _loopCountOfValueForReplaceByAtomic;
 		
 		self.valueForReplaceByAtomic = value;
 	}
@@ -116,10 +127,10 @@
 	{
 		_loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite++;
 		
-		struct EzSampleObjectStructValue value = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
+		EzSampleObjectClassValue* value = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
 		
-		value.a = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
-		value.b = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
+		value->a = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
+		value->b = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
 		
 		_valueForReplaceByAtomicReadAndNonAtomicWrite = value;
 	}

@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+#define EzSampleViewControllerTestStep 250
+
 @interface EzSampleViewController : UIViewController
+
+@property (nonatomic,readonly,weak) IBOutlet UITextView* logTextView;
+@property (nonatomic,readonly,weak) IBOutlet UITextView* reportTextView;
+@property (nonatomic,readonly,weak) IBOutlet UIProgressView* progressView;
+@property (nonatomic,readonly,weak) IBOutlet UIScrollView* menuScrollView;
+
+- (void)clearOutputs;
 
 @end

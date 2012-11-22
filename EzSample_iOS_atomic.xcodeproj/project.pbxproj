@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B19A75EB165DC83B00DFEC5D /* EzSampleMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B19A75EA165DC83B00DFEC5D /* EzSampleMenuViewController.m */; };
 		B1A85A2E165C93B30041F46B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1A85A2D165C93B30041F46B /* UIKit.framework */; };
 		B1A85A30165C93B30041F46B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1A85A2F165C93B30041F46B /* Foundation.framework */; };
 		B1A85A32165C93B30041F46B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1A85A31165C93B30041F46B /* CoreGraphics.framework */; };
@@ -19,9 +20,20 @@
 		B1A85A47165C93B30041F46B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1A85A45165C93B30041F46B /* MainStoryboard.storyboard */; };
 		B1A85A4A165C93B30041F46B /* EzSampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A49165C93B30041F46B /* EzSampleViewController.m */; };
 		B1A85A52165C95EE0041F46B /* EzSampleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A51165C95EE0041F46B /* EzSampleObject.m */; };
+		B1A85A56165CEF760041F46B /* EzSampleObjectCustomProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A55165CEF760041F46B /* EzSampleObjectCustomProperties.m */; };
+		B1A85A59165CF5D10041F46B /* EzSampleObjectCustomPropertiesWithSynchronized.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A58165CF5D00041F46B /* EzSampleObjectCustomPropertiesWithSynchronized.m */; };
+		B1A85A5C165CF9850041F46B /* EzSampleObjectCustomPropertiesWithAtomicAndSynchronized.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A5B165CF9850041F46B /* EzSampleObjectCustomPropertiesWithAtomicAndSynchronized.m */; };
+		B1A85A5F165D00A60041F46B /* EzSampleLongLong.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A5E165D00A60041F46B /* EzSampleLongLong.m */; };
+		B1A85A62165D0C2F0041F46B /* EzSampleLongLongOverrideAtomicGetter.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A61165D0C2F0041F46B /* EzSampleLongLongOverrideAtomicGetter.m */; };
+		B1A85A65165D111F0041F46B /* EzSampleLong.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A64165D111F0041F46B /* EzSampleLong.m */; };
+		B1A85A6C165D167D0041F46B /* EzSampleObjectClassValue.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A6B165D167D0041F46B /* EzSampleObjectClassValue.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B1A85A70165D169E0041F46B /* EzSampleClass.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A6F165D169E0041F46B /* EzSampleClass.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B19A75E9165DC83B00DFEC5D /* EzSampleMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleMenuViewController.h; sourceTree = "<group>"; };
+		B19A75EA165DC83B00DFEC5D /* EzSampleMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleMenuViewController.m; sourceTree = "<group>"; };
+		B19A75EC165DC8F500DFEC5D /* EzSampleMenuViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EzSampleMenuViewControllerDelegate.h; sourceTree = "<group>"; };
 		B1A85A29165C93B30041F46B /* EzSample_iOS_atomic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EzSample_iOS_atomic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1A85A2D165C93B30041F46B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B1A85A2F165C93B30041F46B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -40,6 +52,23 @@
 		B1A85A49165C93B30041F46B /* EzSampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EzSampleViewController.m; sourceTree = "<group>"; };
 		B1A85A50165C95EE0041F46B /* EzSampleObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleObject.h; sourceTree = "<group>"; };
 		B1A85A51165C95EE0041F46B /* EzSampleObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleObject.m; sourceTree = "<group>"; };
+		B1A85A53165CED180041F46B /* EzSampleObjectProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EzSampleObjectProtocol.h; sourceTree = "<group>"; };
+		B1A85A54165CEF760041F46B /* EzSampleObjectCustomProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleObjectCustomProperties.h; sourceTree = "<group>"; };
+		B1A85A55165CEF760041F46B /* EzSampleObjectCustomProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleObjectCustomProperties.m; sourceTree = "<group>"; };
+		B1A85A57165CF5D00041F46B /* EzSampleObjectCustomPropertiesWithSynchronized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleObjectCustomPropertiesWithSynchronized.h; sourceTree = "<group>"; };
+		B1A85A58165CF5D00041F46B /* EzSampleObjectCustomPropertiesWithSynchronized.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleObjectCustomPropertiesWithSynchronized.m; sourceTree = "<group>"; };
+		B1A85A5A165CF9850041F46B /* EzSampleObjectCustomPropertiesWithAtomicAndSynchronized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleObjectCustomPropertiesWithAtomicAndSynchronized.h; sourceTree = "<group>"; };
+		B1A85A5B165CF9850041F46B /* EzSampleObjectCustomPropertiesWithAtomicAndSynchronized.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleObjectCustomPropertiesWithAtomicAndSynchronized.m; sourceTree = "<group>"; };
+		B1A85A5D165D00A60041F46B /* EzSampleLongLong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleLongLong.h; sourceTree = "<group>"; };
+		B1A85A5E165D00A60041F46B /* EzSampleLongLong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleLongLong.m; sourceTree = "<group>"; };
+		B1A85A60165D0C2F0041F46B /* EzSampleLongLongOverrideAtomicGetter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleLongLongOverrideAtomicGetter.h; sourceTree = "<group>"; };
+		B1A85A61165D0C2F0041F46B /* EzSampleLongLongOverrideAtomicGetter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleLongLongOverrideAtomicGetter.m; sourceTree = "<group>"; };
+		B1A85A63165D111F0041F46B /* EzSampleLong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleLong.h; sourceTree = "<group>"; };
+		B1A85A64165D111F0041F46B /* EzSampleLong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleLong.m; sourceTree = "<group>"; };
+		B1A85A6A165D167D0041F46B /* EzSampleObjectClassValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleObjectClassValue.h; sourceTree = "<group>"; };
+		B1A85A6B165D167D0041F46B /* EzSampleObjectClassValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleObjectClassValue.m; sourceTree = "<group>"; };
+		B1A85A6E165D169E0041F46B /* EzSampleClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleClass.h; sourceTree = "<group>"; };
+		B1A85A6F165D169E0041F46B /* EzSampleClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleClass.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,8 +120,28 @@
 				B1A85A45165C93B30041F46B /* MainStoryboard.storyboard */,
 				B1A85A48165C93B30041F46B /* EzSampleViewController.h */,
 				B1A85A49165C93B30041F46B /* EzSampleViewController.m */,
+				B19A75E9165DC83B00DFEC5D /* EzSampleMenuViewController.h */,
+				B19A75EA165DC83B00DFEC5D /* EzSampleMenuViewController.m */,
+				B19A75EC165DC8F500DFEC5D /* EzSampleMenuViewControllerDelegate.h */,
+				B1A85A6A165D167D0041F46B /* EzSampleObjectClassValue.h */,
+				B1A85A6B165D167D0041F46B /* EzSampleObjectClassValue.m */,
+				B1A85A53165CED180041F46B /* EzSampleObjectProtocol.h */,
 				B1A85A50165C95EE0041F46B /* EzSampleObject.h */,
 				B1A85A51165C95EE0041F46B /* EzSampleObject.m */,
+				B1A85A54165CEF760041F46B /* EzSampleObjectCustomProperties.h */,
+				B1A85A55165CEF760041F46B /* EzSampleObjectCustomProperties.m */,
+				B1A85A57165CF5D00041F46B /* EzSampleObjectCustomPropertiesWithSynchronized.h */,
+				B1A85A58165CF5D00041F46B /* EzSampleObjectCustomPropertiesWithSynchronized.m */,
+				B1A85A5A165CF9850041F46B /* EzSampleObjectCustomPropertiesWithAtomicAndSynchronized.h */,
+				B1A85A5B165CF9850041F46B /* EzSampleObjectCustomPropertiesWithAtomicAndSynchronized.m */,
+				B1A85A5D165D00A60041F46B /* EzSampleLongLong.h */,
+				B1A85A5E165D00A60041F46B /* EzSampleLongLong.m */,
+				B1A85A60165D0C2F0041F46B /* EzSampleLongLongOverrideAtomicGetter.h */,
+				B1A85A61165D0C2F0041F46B /* EzSampleLongLongOverrideAtomicGetter.m */,
+				B1A85A63165D111F0041F46B /* EzSampleLong.h */,
+				B1A85A64165D111F0041F46B /* EzSampleLong.m */,
+				B1A85A6E165D169E0041F46B /* EzSampleClass.h */,
+				B1A85A6F165D169E0041F46B /* EzSampleClass.m */,
 				B1A85A34165C93B30041F46B /* Supporting Files */,
 			);
 			path = EzSample_iOS_atomic;
@@ -183,6 +232,15 @@
 				B1A85A3E165C93B30041F46B /* EzSampleAppDelegate.m in Sources */,
 				B1A85A4A165C93B30041F46B /* EzSampleViewController.m in Sources */,
 				B1A85A52165C95EE0041F46B /* EzSampleObject.m in Sources */,
+				B1A85A56165CEF760041F46B /* EzSampleObjectCustomProperties.m in Sources */,
+				B1A85A59165CF5D10041F46B /* EzSampleObjectCustomPropertiesWithSynchronized.m in Sources */,
+				B1A85A5C165CF9850041F46B /* EzSampleObjectCustomPropertiesWithAtomicAndSynchronized.m in Sources */,
+				B1A85A5F165D00A60041F46B /* EzSampleLongLong.m in Sources */,
+				B1A85A62165D0C2F0041F46B /* EzSampleLongLongOverrideAtomicGetter.m in Sources */,
+				B1A85A65165D111F0041F46B /* EzSampleLong.m in Sources */,
+				B1A85A6C165D167D0041F46B /* EzSampleObjectClassValue.m in Sources */,
+				B1A85A70165D169E0041F46B /* EzSampleClass.m in Sources */,
+				B19A75EB165DC83B00DFEC5D /* EzSampleMenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,7 +288,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -251,7 +309,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -299,6 +357,7 @@
 				B1A85A4F165C93B30041F46B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

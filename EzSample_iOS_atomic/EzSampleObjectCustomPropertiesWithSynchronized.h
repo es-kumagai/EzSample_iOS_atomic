@@ -1,5 +1,5 @@
 //
-//  EzSampleObject.h
+//  EzSampleObjectCustomProperties.h
 //  EzSample_iOS_atomic
 //
 //  Created by 熊谷 友宏 on H.24/11/21.
@@ -9,8 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "EzSampleObjectProtocol.h"
 
-@interface EzSampleObject : NSObject <EzSampleObjectProtocol>
+@interface EzSampleObjectCustomPropertiesWithSynchronized : NSObject <EzSampleObjectProtocol>
 {
+	struct EzSampleObjectStructValue _valueForReplaceByNonAtomic;
+	struct EzSampleObjectStructValue _valueForReplaceByAtomic;
 	struct EzSampleObjectStructValue _valueForReplaceByAtomicReadAndNonAtomicWrite;
 	
 	__strong NSThread* _threadForValueForReplaceByNonAtomic;
