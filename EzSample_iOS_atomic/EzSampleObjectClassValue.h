@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+// Objective-C インスタンスの原子性テストを行うときに使用する「値」です。
 @interface EzSampleObjectClassValue : NSObject <NSCopying>
 {
 	@public
@@ -19,5 +20,8 @@
 }
 
 - (id)initWithLabel:(NSString*)label;
+
++ (void)setLogTargetThread:(NSThread*)targetThread;
++ (NSThread*)logTargetThread;
 
 @end

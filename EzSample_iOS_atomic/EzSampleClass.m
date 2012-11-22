@@ -8,6 +8,8 @@
 
 #import "EzSampleClass.h"
 
+#define EzSampleClassLoggingCount 10
+
 @interface EzSampleClass ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
@@ -60,6 +62,8 @@
 	_threadForValueForReplaceByAtomic = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByAtomic:) object:nil];
 	_threadForValueForReplaceByAtomicReadAndNonAtomicWrite = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByAtomicReadAndNonAtomicWrite:) object:nil];
 	
+	[EzSampleObjectClassValue setLogTargetThread:_threadForValueForReplaceByAtomic];
+	
 	[_threadForValueForReplaceByNonAtomic start];
 	[_threadForValueForReplaceByAtomic start];
 	[_threadForValueForReplaceByAtomicReadAndNonAtomicWrite start];
@@ -93,12 +97,36 @@
 	{
 		_loopCountOfValueForReplaceByNonAtomic++;
 		
+		// ログ出力すべきタイミングかを調べます。
+		if (_loggingCountForReplaceByNonAtomic == 0)
+		{
+			if ([EzSampleObjectClassValue logTargetThread] == currentThread)
+			{
+				_loggingCountForReplaceByNonAtomic = 1;
+			}
+		}
+		else
+		{
+			_loggingCountForReplaceByNonAtomic++;
+		}
+		
+		BOOL logging = (_loggingCountForReplaceByNonAtomic > 0 && _loggingCountForReplaceByNonAtomic <= EzSampleClassLoggingCount);
+		
+		if (logging) NSLog(@"NONATOMIC: Property will read.");
 		EzSampleObjectClassValue* value = self.valueForReplaceByNonAtomic;
+		if (logging) NSLog(@"NONATOMIC: Property did read.");
 		
 		value->a = _loopCountOfValueForReplaceByNonAtomic;
 		value->b = _loopCountOfValueForReplaceByNonAtomic;
 		
+		if (logging) NSLog(@"NONATOMIC: Property will write.");
 		self.valueForReplaceByNonAtomic = value;
+		if (logging) NSLog(@"NONATOMIC: Property did write.");
+		
+		if (_loggingCountForReplaceByNonAtomic == EzSampleClassLoggingCount)
+		{
+			[EzSampleObjectClassValue setLogTargetThread:nil];
+		}
 	}
 	
 	_threadForValueForReplaceByNonAtomic = nil;
@@ -114,12 +142,36 @@
 	{
 		_loopCountOfValueForReplaceByAtomic++;
 		
+		// ログ出力すべきタイミングかを調べます。
+		if (_loggingCountForReplaceByAtomic == 0)
+		{
+			if ([EzSampleObjectClassValue logTargetThread] == currentThread)
+			{
+				_loggingCountForReplaceByAtomic = 1;
+			}
+		}
+		else
+		{
+			_loggingCountForReplaceByAtomic++;
+		}
+		
+		BOOL logging = (_loggingCountForReplaceByAtomic > 0 && _loggingCountForReplaceByAtomic <= EzSampleClassLoggingCount);
+		
+		if (logging) NSLog(@"ATOMIC: Property will read.");
 		EzSampleObjectClassValue* value = self.valueForReplaceByAtomic;
+		if (logging) NSLog(@"ATOMIC: Property did read.");
 		
 		value->a = _loopCountOfValueForReplaceByAtomic;
 		value->b = _loopCountOfValueForReplaceByAtomic;
 		
+		if (logging) NSLog(@"ATOMIC: Property will write.");
 		self.valueForReplaceByAtomic = value;
+		if (logging) NSLog(@"ATOMIC: Property did write.");
+		
+		if (_loggingCountForReplaceByAtomic == EzSampleClassLoggingCount)
+		{
+			[EzSampleObjectClassValue setLogTargetThread:_threadForValueForReplaceByNonAtomic];
+		}
 	}
 	
 	_threadForValueForReplaceByAtomic = nil;

@@ -10,7 +10,7 @@
 #import "EzSampleObjectProtocol.h"
 #import "EzSampleObjectClassValue.h"
 
-@interface EzSampleClass : NSObject <EzSampleObjectProtocol>
+@interface EzSampleClassCopy : NSObject <EzSampleObjectProtocol>
 {
 	EzSampleObjectClassValue* _valueForReplaceByAtomicReadAndNonAtomicWrite;
 	
@@ -19,12 +19,11 @@
 	__strong NSThread* _threadForValueForReplaceByAtomicReadAndNonAtomicWrite;
 	
 	NSUInteger _loggingCountForReplaceByAtomic;
-	NSUInteger _loggingCountForReplaceByNonAtomic;
 }
 
-@property (nonatomic,readwrite,strong) EzSampleObjectClassValue* valueForReplaceByNonAtomic;
-@property (atomic,readwrite,strong) EzSampleObjectClassValue* valueForReplaceByAtomic;
-@property (atomic,readonly,strong) EzSampleObjectClassValue* valueForReplaceByAtomicReadAndNonAtomicWrite;
+@property (nonatomic,readwrite,copy) EzSampleObjectClassValue* valueForReplaceByNonAtomic;
+@property (atomic,readwrite,copy) EzSampleObjectClassValue* valueForReplaceByAtomic;
+@property (atomic,readonly,copy) EzSampleObjectClassValue* valueForReplaceByAtomicReadAndNonAtomicWrite;
 
 @property (nonatomic,readonly) int loopCountOfValueForReplaceByNonAtomic;
 @property (nonatomic,readonly) int loopCountOfValueForReplaceByAtomic;
@@ -33,6 +32,10 @@
 @property (atomic,readwrite) BOOL inconsistentReplaceByNonAtomic;
 @property (atomic,readwrite) BOOL inconsistentReplaceByAtomic;
 @property (atomic,readwrite) BOOL inconsistentReplaceByAtomicReadAndNonAtomicWrite;
+
+@property (atomic,readwrite,copy) NSString* errorMessageForReplaceByNonAtomic;
+@property (atomic,readwrite,copy) NSString* errorMessageForReplaceByAtomic;
+@property (atomic,readwrite,copy) NSString* errorMessageForReplaceByAtomicReadAndNonAtomicWrite;
 
 - (BOOL)outputStructState:(EzSampleObjectClassValue*)value withLabel:(NSString*)label;
 

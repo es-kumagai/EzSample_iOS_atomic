@@ -7,7 +7,6 @@
 //
 
 #import "EzSampleViewController.h"
-#import "EzSampleMenuViewController.h"
 
 @interface EzSampleViewController () <EzSampleMenuViewControllerDelegate>
 
@@ -26,7 +25,6 @@
 
 @implementation EzSampleViewController
 {
-	__strong EzSampleMenuViewController* _menuViewContrller;
 	__strong NSMutableArray* _logBuffer;
 	__strong NSThread* _updateLogThread;
 }
@@ -38,24 +36,11 @@
 	_logBuffer = [[NSMutableArray alloc] init];
 	
 	[self clearOutputs];
-	
-	_menuViewContrller = [self.storyboard instantiateViewControllerWithIdentifier:@"MENU"];
-	_menuViewContrller.delegate = self;
-	
-	self.menuScrollView.contentSize = _menuViewContrller.view.frame.size;
-	
-	[self addChildViewController:_menuViewContrller];
-	[self.menuScrollView addSubview:_menuViewContrller.view];
 }
 
 - (void)viewDidUnload
 {
 	[super viewDidUnload];
-	
-	[_menuViewContrller.view removeFromSuperview];
-	[_menuViewContrller removeFromParentViewController];
-	
-	_menuViewContrller = nil;
 	
 	_logBuffer = nil;
 }
@@ -183,13 +168,12 @@
 	self.logTextView.text = text;
 }
 
-- (void)EzSampleMenuViewController:(EzSampleMenuViewController *)menuViewController testButtonForTestInstancePushed:(id<EzSampleObjectProtocol>)testInstance
+- (void)EzSampleMenuTableViewController:(EzSampleMenuTableViewController*)menuTableViewController testButtonForTestInstancePushed:(id<EzSampleObjectProtocol>)testInstance
 {
-	_menuViewContrller.menuButtonsEnabled = [[NSNumber alloc] initWithBool:NO];
+	_menuTableViewController.tableView.userInteractionEnabled = NO;
 	self.logTextView.scrollEnabled = NO;
 
-	EzPostLog(@"Testing thread-safe %d times.", EzSampleViewControllerTestStep);
-	EzPostLog(@"");
+	EzPostLog(@"Testing thread-safe, checking %d times.", EzSampleViewControllerTestStep);
 	EzPostLog(@"Data size: void=%lu, long=%lu, int=%lu, long long=%lu", sizeof(void), sizeof(long), sizeof(int), sizeof(long long));
 	EzPostMark;
 	
@@ -253,7 +237,7 @@
 	[testInstance outputLoopCount];
 
 	self.logTextView.scrollEnabled = YES;
-	_menuViewContrller.menuButtonsEnabled = [[NSNumber alloc] initWithBool:YES];
+	_menuTableViewController.tableView.userInteractionEnabled = YES;
 }
 
 @end

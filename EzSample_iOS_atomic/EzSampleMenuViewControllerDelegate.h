@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "EzSampleObjectProtocol.h"
 
-@class EzSampleMenuViewController;
+// テスト項目が選ばれたことを通知するデリゲートです。
+@class EzSampleMenuTableViewController;
 
 @protocol EzSampleMenuViewControllerDelegate <NSObject>
 
 @required
 
-- (void)EzSampleMenuViewController:(EzSampleMenuViewController*)menuViewController testButtonForTestInstancePushed:(id<EzSampleObjectProtocol>)testInstance;
+- (void)EzSampleMenuTableViewController:(EzSampleMenuTableViewController*)menuTableViewController testButtonForTestInstancePushed:(id<EzSampleObjectProtocol>)testInstance;
 
 @end
