@@ -6,11 +6,11 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleClass.h"
+#import "EzSampleClassWeak.h"
 
 #define EzSampleClassLoggingCount 10
 
-@interface EzSampleClass ()
+@interface EzSampleClassWeak ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation EzSampleClass
+@implementation EzSampleClassWeak
 
 - (id)init
 {
@@ -26,30 +26,35 @@
 	
 	if (self)
 	{
-		_valueForReplaceByAtomic = [[EzSampleObjectClassValue alloc] initWithLabel:@"ATOMIC"];
-		_valueForReplaceByNonAtomic = [[EzSampleObjectClassValue alloc] initWithLabel:@"NONATOMIC"];
-		_valueForReplaceByAtomicReadAndNonAtomicWrite = [[EzSampleObjectClassValue alloc] initWithLabel:@"(R)ATOMIC-(W)NONATOMIC"];
 	}
 	
 	return self;
 }
 
-- (BOOL)outputStructState:(EzSampleObjectClassValue*)value withLabel:(NSString*)label
+- (EzSampleClassWeakState)outputStructState:(EzSampleObjectClassValue*)value withLabel:(NSString*)label
 {
-	BOOL threadSafe;
+	EzSampleClassWeakState state;
 	
-	if (value->valid == 0)
+	if (value)
 	{
-		threadSafe = (value->a == value->b);
-		EzPostLog(@"%-15s : %2s (%d,%d)", label.UTF8String, (threadSafe ? "OK" : "NG"), value->a, value->b);
+		if (value->valid == 0)
+		{
+			state = (value->a == value->b ? EzSampleClassWeakStateOK : EzSampleClassWeakStateInconsistent);
+			EzPostLog(@"%-15s : %2s (%d,%d)", label.UTF8String, (state == EzSampleClassWeakStateOK ? "OK" : "NG"), value->a, value->b);
+		}
+		else
+		{
+			state = EzSampleClassWeakStateInconsistent;
+			EzPostLog(@"%-15s : DEALLOC", label.UTF8String);
+		}		
 	}
 	else
 	{
-		threadSafe = NO;
-		EzPostLog(@"%-15s : DEALLOC", label.UTF8String);
+		state = EzSampleClassWeakStateWeakNil;
+		EzPostLog(@"%-15s : OK (weak-null)", label.UTF8String);
 	}
-	
-	return threadSafe;
+		
+	return state;
 }
 
 - (void)outputLoopCount
@@ -66,7 +71,7 @@
 	}
 	else
 	{
-		EzPostReport(@"ATOMIC          : %12s times (%@)", [formatter stringFromNumber:[[NSNumber alloc] initWithInt:self.loopCountOfValueForReplaceByAtomic]].UTF8String, (self.inconsistentReplaceByAtomic ? @"UNSAFE" : @"SAFE ?"));
+		EzPostReport(@"ATOMIC          : %12s times (%@)", [formatter stringFromNumber:[[NSNumber alloc] initWithInt:self.loopCountOfValueForReplaceByAtomic]].UTF8String, (self.inconsistentReplaceByAtomic ? @"UNSAFE" : (self.weakNilReplaceByAtomic ? @"wSAFE?" : @"SAFE ?")));
 	}
 	
 	if (self.errorMessageForReplaceByNonAtomic)
@@ -75,7 +80,7 @@
 	}
 	else
 	{
-		EzPostReport(@"NONATOMIC       : %12s times (%@)", [formatter stringFromNumber:[[NSNumber alloc] initWithInt:self.loopCountOfValueForReplaceByNonAtomic]].UTF8String, (self.inconsistentReplaceByNonAtomic ? @"UNSAFE" : @"SAFE ?"));
+		EzPostReport(@"NONATOMIC       : %12s times (%@)", [formatter stringFromNumber:[[NSNumber alloc] initWithInt:self.loopCountOfValueForReplaceByNonAtomic]].UTF8String, (self.inconsistentReplaceByNonAtomic ? @"UNSAFE" : (self.weakNilReplaceByNonAtomic ? @"wSAFE?" : @"SAFE ?")));
 	}
 	
 	if (self.errorMessageForReplaceByAtomicReadAndNonAtomicWrite)
@@ -84,7 +89,7 @@
 	}
 	else
 	{
-		EzPostReport(@"R:ATOM-W:DIRECT : %12s times (%@)", [formatter stringFromNumber:[[NSNumber alloc] initWithInt:self.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite]].UTF8String, (self.inconsistentReplaceByAtomicReadAndNonAtomicWrite ? @"UNSAFE" : @"SAFE ?"));
+		EzPostReport(@"R:ATOM-W:DIRECT : %12s times (%@)", [formatter stringFromNumber:[[NSNumber alloc] initWithInt:self.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite]].UTF8String, (self.inconsistentReplaceByAtomicReadAndNonAtomicWrite ? @"UNSAFE" : (self.weakNilReplaceByAtomicReadAndNonAtomicWrite ? @"wSAFE?" : @"SAFE ?")));
 	}
 }
 
@@ -96,11 +101,11 @@
 	
 	[EzSampleObjectClassValue setLogTargetThread:_threadForValueForReplaceByAtomic];
 	
-//	[_threadForValueForReplaceByNonAtomic start];
+	[_threadForValueForReplaceByNonAtomic start];
 	[_threadForValueForReplaceByAtomic start];
 	[_threadForValueForReplaceByAtomicReadAndNonAtomicWrite start];
 	
-	self.errorMessageForReplaceByNonAtomic = @"Cannot test because hungup causes EXC_BAD_ACCESS.";
+//	self.errorMessageForReplaceByNonAtomic = @"Cannot test because hungup causes EXC_BAD_ACCESS.";
 }
 
 - (void)stop
@@ -120,7 +125,19 @@
 	
 	if (_threadForValueForReplaceByAtomic.isExecuting)
 	{
-		if (![self outputStructState:self.valueForReplaceByAtomic withLabel:labelForAtomic]) self.inconsistentReplaceByAtomic = YES;
+		switch ([self outputStructState:self.valueForReplaceByAtomic withLabel:labelForAtomic])
+		{
+			case EzSampleClassWeakStateInconsistent:
+				self.inconsistentReplaceByAtomic = YES;
+				break;
+				
+			case EzSampleClassWeakStateWeakNil:
+				self.weakNilReplaceByAtomic = YES;
+				break;
+				
+			default:
+				break;
+		}
 	}
 	else
 	{
@@ -129,7 +146,19 @@
 	
 	if (_threadForValueForReplaceByNonAtomic.isExecuting)
 	{
-		if (![self outputStructState:self.valueForReplaceByNonAtomic withLabel:labelForNonAtomic]) self.inconsistentReplaceByNonAtomic = YES;
+		switch ([self outputStructState:self.valueForReplaceByNonAtomic withLabel:labelForAtomic])
+		{
+			case EzSampleClassWeakStateInconsistent:
+				self.inconsistentReplaceByNonAtomic = YES;
+				break;
+				
+			case EzSampleClassWeakStateWeakNil:
+				self.weakNilReplaceByNonAtomic = YES;
+				break;
+				
+			default:
+				break;
+		}
 	}
 	else
 	{
@@ -138,7 +167,19 @@
 	
 	if (_threadForValueForReplaceByAtomicReadAndNonAtomicWrite.isExecuting)
 	{
-		if (![self outputStructState:self.valueForReplaceByAtomicReadAndNonAtomicWrite withLabel:labelForAtomicReadAndNonAtomicWrite]) self.inconsistentReplaceByAtomicReadAndNonAtomicWrite = YES;
+		switch ([self outputStructState:self.valueForReplaceByAtomicReadAndNonAtomicWrite withLabel:labelForAtomic])
+		{
+			case EzSampleClassWeakStateInconsistent:
+				self.inconsistentReplaceByAtomicReadAndNonAtomicWrite = YES;
+				break;
+				
+			case EzSampleClassWeakStateWeakNil:
+				self.weakNilReplaceByAtomicReadAndNonAtomicWrite = YES;
+				break;
+				
+			default:
+				break;
+		}
 	}
 	else
 	{
@@ -171,32 +212,34 @@
 			
 			BOOL logging = (_loggingCountForReplaceByNonAtomic > 0 && _loggingCountForReplaceByNonAtomic <= EzSampleClassLoggingCount);
 			
+			// Weak ポインタへの操作のため、ここでインスタンスを生成します。
+			EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:@"NONATOMIC"];
+			
+			value->a = _loopCountOfValueForReplaceByNonAtomic;
+			value->b = _loopCountOfValueForReplaceByNonAtomic;
+			
+			if (logging) NSLog(@"NONATOMIC: Property will write.");
+			self.valueForReplaceByNonAtomic = value;
+			if (logging) NSLog(@"NONATOMIC: Property did write.");
+			
 			@autoreleasepool
 			{
 				// ローカルスコープを定義します。
 				{
 					if (logging) NSLog(@"NONATOMIC: Property will read.");
-					EzSampleObjectClassValue* value = self.valueForReplaceByNonAtomic;
+					EzSampleObjectClassValue* temp = self.valueForReplaceByNonAtomic;
 					if (logging) NSLog(@"NONATOMIC: Property did read.");
-					
-					// 同じポインタだと、プロパティ経由で代入したときに retain が省略されるため、複製を取ります。
-					value = [value copy];
-					
-					value->a = _loopCountOfValueForReplaceByNonAtomic;
-					value->b = _loopCountOfValueForReplaceByNonAtomic;
-					
-					if (logging) NSLog(@"NONATOMIC: Property will write.");
-					self.valueForReplaceByNonAtomic = value;
-					if (logging) NSLog(@"NONATOMIC: Property did write.");
-					
+					if (logging) NSLog(@"%@", temp);
+
 					if (logging) NSLog(@"NONATOMIC: Will End of local scope.");
 				}
-
+				
 				if (logging) NSLog(@"NONATOMIC: Did End of local scope.");
+				
 				if (logging) NSLog(@"NONATOMIC: Will End of autorelease pool.");
 			}
 			
-			if (logging) NSLog(@"NONATOMIC: Did End of autorelease pool.");
+			if (logging) NSLog(@"NONATOMIC: End of autorelease pool.");
 			
 			if (_loggingCountForReplaceByNonAtomic == EzSampleClassLoggingCount)
 			{
@@ -240,32 +283,34 @@
 			
 			BOOL logging = (_loggingCountForReplaceByAtomic > 0 && _loggingCountForReplaceByAtomic <= EzSampleClassLoggingCount);
 			
+			// Weak ポインタへの操作のため、ここでインスタンスを生成します。
+			EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:@"ATOMIC"];
+			
+			value->a = _loopCountOfValueForReplaceByAtomic;
+			value->b = _loopCountOfValueForReplaceByAtomic;
+			
+			if (logging) NSLog(@"ATOMIC: Property will write.");
+			self.valueForReplaceByAtomic = value;
+			if (logging) NSLog(@"ATOMIC: Property did write.");
+			
 			@autoreleasepool
 			{
 				// ローカルスコープを定義します。
 				{
 					if (logging) NSLog(@"ATOMIC: Property will read.");
-					EzSampleObjectClassValue* value = self.valueForReplaceByAtomic;
+					EzSampleObjectClassValue* temp = self.valueForReplaceByAtomic;
 					if (logging) NSLog(@"ATOMIC: Property did read.");
-					
-					// 同じポインタだと、プロパティ経由で代入したときに retain が省略されるため、複製を取ります。
-					value = [value copy];
-					
-					value->a = _loopCountOfValueForReplaceByAtomic;
-					value->b = _loopCountOfValueForReplaceByAtomic;
-					
-					if (logging) NSLog(@"ATOMIC: Property will write.");
-					self.valueForReplaceByAtomic = value;
-					if (logging) NSLog(@"ATOMIC: Property did write.");
+					if (logging) NSLog(@"%@", temp);
 					
 					if (logging) NSLog(@"ATOMIC: Will End of local scope.");
 				}
-
+				
 				if (logging) NSLog(@"ATOMIC: Did End of local scope.");
+
 				if (logging) NSLog(@"ATOMIC: Will End of autorelease pool.");
 			}
 			
-			if (logging) NSLog(@"ATOMIC: Did End of autorelease pool.");
+			if (logging) NSLog(@"ATOMIC: End of autorelease pool.");
 			
 			if (_loggingCountForReplaceByAtomic == EzSampleClassLoggingCount)
 			{
@@ -294,15 +339,54 @@
 		{
 			_loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite++;
 			
-			EzSampleObjectClassValue* value = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
+			// ログ出力すべきタイミングかを調べます。
+			if (_loggingCountForReplaceByAtomicReadAndNonAtomicWrite == 0)
+			{
+				if ([EzSampleObjectClassValue logTargetThread] == currentThread)
+				{
+					_loggingCountForReplaceByAtomicReadAndNonAtomicWrite = 1;
+				}
+			}
+			else
+			{
+				_loggingCountForReplaceByAtomicReadAndNonAtomicWrite++;
+			}
 			
-			// 同じポインタだと、プロパティ経由で代入したときに retain が省略されるため、複製を取ります。
-			value = [value copy];
+			BOOL logging = (_loggingCountForReplaceByAtomicReadAndNonAtomicWrite > 0 && _loggingCountForReplaceByAtomicReadAndNonAtomicWrite <= EzSampleClassLoggingCount);
+			
+			// Weak ポインタへの操作のため、ここでインスタンスを生成します。
+			EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:@"(R)ATOMIC-(W)NONATOMIC"];
 			
 			value->a = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
 			value->b = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
 			
+			if (logging) NSLog(@"(R)ATOMIC-(W)NONATOMIC: Property will write.");
 			_valueForReplaceByAtomicReadAndNonAtomicWrite = value;
+			if (logging) NSLog(@"ATOMIC: Property did write.");
+			
+			@autoreleasepool
+			{
+				// ローカルスコープを定義します。
+				{
+					if (logging) NSLog(@"(R)ATOMIC-(W)NONATOMIC: Property will read.");
+					EzSampleObjectClassValue* temp = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
+					if (logging) NSLog(@"(R)ATOMIC-(W)NONATOMIC: Property did read.");
+					if (logging) NSLog(@"%@", temp);
+					
+					if (logging) NSLog(@"(R)ATOMIC-(W)NONATOMIC: Will End of local scope.");
+				}
+				
+				if (logging) NSLog(@"(R)ATOMIC-(W)NONATOMIC: Did End of local scope.");
+				
+				if (logging) NSLog(@"(R)ATOMIC-(W)NONATOMIC: Will End of autorelease pool.");
+			}
+			
+			if (logging) NSLog(@"(R)ATOMIC-(W)NONATOMIC: End of autorelease pool.");
+			
+			if (_loggingCountForReplaceByAtomicReadAndNonAtomicWrite == EzSampleClassLoggingCount)
+			{
+				[EzSampleObjectClassValue setLogTargetThread:nil];
+			}
 		}
 	}
 	@catch (NSException* exception)

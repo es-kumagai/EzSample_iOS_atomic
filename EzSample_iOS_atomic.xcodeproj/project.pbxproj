@@ -11,6 +11,9 @@
 		B19A75F2165E1C1C00DFEC5D /* EzSampleMenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B19A75F1165E1C1C00DFEC5D /* EzSampleMenuTableViewController.m */; };
 		B19A75F5165E1C7400DFEC5D /* EzSampleMenuTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B19A75F4165E1C7400DFEC5D /* EzSampleMenuTableItem.m */; };
 		B19A75F8165E1EEA00DFEC5D /* EzSampleMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B19A75F7165E1EE900DFEC5D /* EzSampleMenuTableViewCell.m */; };
+		B19A75FB165E578D00DFEC5D /* EzSampleClassNonARC.m in Sources */ = {isa = PBXBuildFile; fileRef = B19A75FA165E578C00DFEC5D /* EzSampleClassNonARC.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B1A2D73D165F9490000DE6DE /* EzSampleClassAssign.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A2D73A165F9490000DE6DE /* EzSampleClassAssign.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B1A2D73E165F9490000DE6DE /* EzSampleClassWeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A2D73C165F9490000DE6DE /* EzSampleClassWeak.m */; };
 		B1A85A2E165C93B30041F46B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1A85A2D165C93B30041F46B /* UIKit.framework */; };
 		B1A85A30165C93B30041F46B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1A85A2F165C93B30041F46B /* Foundation.framework */; };
 		B1A85A32165C93B30041F46B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1A85A31165C93B30041F46B /* CoreGraphics.framework */; };
@@ -43,6 +46,12 @@
 		B19A75F4165E1C7400DFEC5D /* EzSampleMenuTableItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleMenuTableItem.m; sourceTree = "<group>"; };
 		B19A75F6165E1EE900DFEC5D /* EzSampleMenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleMenuTableViewCell.h; sourceTree = "<group>"; };
 		B19A75F7165E1EE900DFEC5D /* EzSampleMenuTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleMenuTableViewCell.m; sourceTree = "<group>"; };
+		B19A75F9165E578C00DFEC5D /* EzSampleClassNonARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleClassNonARC.h; sourceTree = "<group>"; };
+		B19A75FA165E578C00DFEC5D /* EzSampleClassNonARC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleClassNonARC.m; sourceTree = "<group>"; };
+		B1A2D739165F9490000DE6DE /* EzSampleClassAssign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleClassAssign.h; sourceTree = "<group>"; };
+		B1A2D73A165F9490000DE6DE /* EzSampleClassAssign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleClassAssign.m; sourceTree = "<group>"; };
+		B1A2D73B165F9490000DE6DE /* EzSampleClassWeak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleClassWeak.h; sourceTree = "<group>"; };
+		B1A2D73C165F9490000DE6DE /* EzSampleClassWeak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleClassWeak.m; sourceTree = "<group>"; };
 		B1A85A29165C93B30041F46B /* EzSample_iOS_atomic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EzSample_iOS_atomic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1A85A2D165C93B30041F46B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B1A85A2F165C93B30041F46B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -155,8 +164,14 @@
 				B1A85A64165D111F0041F46B /* EzSampleLong.m */,
 				B1A85A6E165D169E0041F46B /* EzSampleClass.h */,
 				B1A85A6F165D169E0041F46B /* EzSampleClass.m */,
+				B19A75F9165E578C00DFEC5D /* EzSampleClassNonARC.h */,
+				B19A75FA165E578C00DFEC5D /* EzSampleClassNonARC.m */,
 				B19A75ED165E185000DFEC5D /* EzSampleClassCopy.h */,
 				B19A75EE165E185000DFEC5D /* EzSampleClassCopy.m */,
+				B1A2D739165F9490000DE6DE /* EzSampleClassAssign.h */,
+				B1A2D73A165F9490000DE6DE /* EzSampleClassAssign.m */,
+				B1A2D73B165F9490000DE6DE /* EzSampleClassWeak.h */,
+				B1A2D73C165F9490000DE6DE /* EzSampleClassWeak.m */,
 				B1A85A34165C93B30041F46B /* Supporting Files */,
 			);
 			path = EzSample_iOS_atomic;
@@ -259,6 +274,9 @@
 				B19A75F2165E1C1C00DFEC5D /* EzSampleMenuTableViewController.m in Sources */,
 				B19A75F5165E1C7400DFEC5D /* EzSampleMenuTableItem.m in Sources */,
 				B19A75F8165E1EEA00DFEC5D /* EzSampleMenuTableViewCell.m in Sources */,
+				B19A75FB165E578D00DFEC5D /* EzSampleClassNonARC.m in Sources */,
+				B1A2D73D165F9490000DE6DE /* EzSampleClassAssign.m in Sources */,
+				B1A2D73E165F9490000DE6DE /* EzSampleClassWeak.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +327,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-fobjc-arc-exceptions";
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -333,6 +352,7 @@
 					"-DNS_BLOCK_ASSERTIONS=1",
 					"-fobjc-arc-exceptions",
 				);
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

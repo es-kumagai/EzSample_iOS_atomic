@@ -10,23 +10,24 @@
 #import "EzSampleObjectProtocol.h"
 #import "EzSampleObjectClassValue.h"
 
-@interface EzSampleClass : NSObject <EzSampleObjectProtocol>
+@interface EzSampleClassAssign : NSObject <EzSampleObjectProtocol>
 {
 	@public
 	
 	EzSampleObjectClassValue* _valueForReplaceByAtomicReadAndNonAtomicWrite;
 	
-	__strong NSThread* _threadForValueForReplaceByNonAtomic;
-	__strong NSThread* _threadForValueForReplaceByAtomic;
-	__strong NSThread* _threadForValueForReplaceByAtomicReadAndNonAtomicWrite;
+	NSThread* _threadForValueForReplaceByNonAtomic;
+	NSThread* _threadForValueForReplaceByAtomic;
+	NSThread* _threadForValueForReplaceByAtomicReadAndNonAtomicWrite;
 	
 	NSUInteger _loggingCountForReplaceByAtomic;
 	NSUInteger _loggingCountForReplaceByNonAtomic;
+	NSUInteger _loggingCountForReplaceByAtomicReadAndNonAtomicWrite;
 }
 
-@property (nonatomic,readwrite,strong) EzSampleObjectClassValue* valueForReplaceByNonAtomic;
-@property (atomic,readwrite,strong) EzSampleObjectClassValue* valueForReplaceByAtomic;
-@property (atomic,readonly,strong) EzSampleObjectClassValue* valueForReplaceByAtomicReadAndNonAtomicWrite;
+@property (nonatomic,readwrite,assign) EzSampleObjectClassValue* valueForReplaceByNonAtomic;
+@property (atomic,readwrite,assign) EzSampleObjectClassValue* valueForReplaceByAtomic;
+@property (atomic,readonly,assign) EzSampleObjectClassValue* valueForReplaceByAtomicReadAndNonAtomicWrite;
 
 @property (nonatomic,readwrite) int loopCountOfValueForReplaceByNonAtomic;
 @property (nonatomic,readwrite) int loopCountOfValueForReplaceByAtomic;

@@ -81,7 +81,14 @@
 		
 		long value = self.valueForReplaceByNonAtomic;
 		
-		value = (_loopCountOfValueForReplaceByNonAtomic % 2 == 0 ? 1 : -1);
+		if (value == 0)
+		{
+			value = 1;
+		}
+		else
+		{
+			value *= -1;
+		}
 		
 		self.valueForReplaceByNonAtomic = value;
 	}
@@ -101,8 +108,15 @@
 		
 		long value = self.valueForReplaceByAtomic;
 		
-		value = (_loopCountOfValueForReplaceByAtomic % 2 == 0 ? 1 : -1);
-		
+		if (value == 0)
+		{
+			value = 1;
+		}
+		else
+		{
+			value *= -1;
+		}
+				
 		self.valueForReplaceByAtomic = value;
 	}
 	
@@ -121,8 +135,15 @@
 		
 		long value = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
 		
-		value = (_loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite % 2 == 0 ? 1 : -1);
-		
+		if (value == 0)
+		{
+			value = 1;
+		}
+		else
+		{
+			value *= -1;
+		}
+				
 		_valueForReplaceByAtomicReadAndNonAtomicWrite = value;
 	}
 	

@@ -10,7 +10,7 @@
 #import "EzSampleMenuTableViewController.h"
 
 // テストの実行回数です。別のスレッドで絶え間なく書き込み中の値を、この回数だけ別スレッドから参照してデータが壊れるかを調べます。
-#define EzSampleViewControllerTestStep 10000
+#define EzSampleViewControllerTestStep 50000
 
 // テストの選択と実行を行うビューコントローラーです。
 @interface EzSampleViewController : UIViewController

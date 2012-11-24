@@ -10,11 +10,18 @@
 #import "EzSampleObjectProtocol.h"
 #import "EzSampleObjectClassValue.h"
 
-@interface EzSampleClass : NSObject <EzSampleObjectProtocol>
+typedef NS_ENUM(NSInteger, EzSampleClassWeakState)
+{
+	EzSampleClassWeakStateInconsistent = -1,
+	EzSampleClassWeakStateWeakNil = 0,
+	EzSampleClassWeakStateOK = 1
+};
+
+@interface EzSampleClassWeak : NSObject <EzSampleObjectProtocol>
 {
 	@public
 	
-	EzSampleObjectClassValue* _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	__weak EzSampleObjectClassValue* _valueForReplaceByAtomicReadAndNonAtomicWrite;
 	
 	__strong NSThread* _threadForValueForReplaceByNonAtomic;
 	__strong NSThread* _threadForValueForReplaceByAtomic;
@@ -22,11 +29,12 @@
 	
 	NSUInteger _loggingCountForReplaceByAtomic;
 	NSUInteger _loggingCountForReplaceByNonAtomic;
+	NSUInteger _loggingCountForReplaceByAtomicReadAndNonAtomicWrite;
 }
 
-@property (nonatomic,readwrite,strong) EzSampleObjectClassValue* valueForReplaceByNonAtomic;
-@property (atomic,readwrite,strong) EzSampleObjectClassValue* valueForReplaceByAtomic;
-@property (atomic,readonly,strong) EzSampleObjectClassValue* valueForReplaceByAtomicReadAndNonAtomicWrite;
+@property (nonatomic,readwrite,weak) EzSampleObjectClassValue* valueForReplaceByNonAtomic;
+@property (atomic,readwrite,weak) EzSampleObjectClassValue* valueForReplaceByAtomic;
+@property (atomic,readonly,weak) EzSampleObjectClassValue* valueForReplaceByAtomicReadAndNonAtomicWrite;
 
 @property (nonatomic,readwrite) int loopCountOfValueForReplaceByNonAtomic;
 @property (nonatomic,readwrite) int loopCountOfValueForReplaceByAtomic;
@@ -36,10 +44,14 @@
 @property (atomic,readwrite) BOOL inconsistentReplaceByAtomic;
 @property (atomic,readwrite) BOOL inconsistentReplaceByAtomicReadAndNonAtomicWrite;
 
+@property (atomic,readwrite) BOOL weakNilReplaceByNonAtomic;
+@property (atomic,readwrite) BOOL weakNilReplaceByAtomic;
+@property (atomic,readwrite) BOOL weakNilReplaceByAtomicReadAndNonAtomicWrite;
+
 @property (atomic,readwrite,copy) NSString* errorMessageForReplaceByNonAtomic;
 @property (atomic,readwrite,copy) NSString* errorMessageForReplaceByAtomic;
 @property (atomic,readwrite,copy) NSString* errorMessageForReplaceByAtomicReadAndNonAtomicWrite;
 
-- (BOOL)outputStructState:(EzSampleObjectClassValue*)value withLabel:(NSString*)label;
+- (EzSampleClassWeakState)outputStructState:(EzSampleObjectClassValue*)value withLabel:(NSString*)label;
 
 @end

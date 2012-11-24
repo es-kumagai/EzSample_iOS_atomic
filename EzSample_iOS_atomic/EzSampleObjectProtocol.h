@@ -11,9 +11,9 @@
 // テスト経過を UI に反映させたい場合は、これらの Notification を使用します。どのスレッドからでも送信できます。
 #define EzPostClear [[NSNotificationCenter defaultCenter] postNotificationName:@"CLEAR" object:nil]
 #define EzPostMark EzPostLog(@"------------")
-#define EzPostLog(message,...) [[NSNotificationCenter defaultCenter] postNotificationName:@"LOG" object:[[NSString alloc] initWithFormat:message, ##__VA_ARGS__]]
-#define EzPostReport(message,...) [[NSNotificationCenter defaultCenter] postNotificationName:@"REPORT" object:[[NSString alloc] initWithFormat:message, ##__VA_ARGS__]]
-#define EzPostProgress(value) [[NSNotificationCenter defaultCenter] postNotificationName:@"PROGRESS" object:[[NSNumber alloc] initWithInt:value]]
+#define EzPostLog(message,...) [[NSNotificationCenter defaultCenter] postNotificationName:@"LOG" object:[NSString stringWithFormat:message, ##__VA_ARGS__]]
+#define EzPostReport(message,...) [[NSNotificationCenter defaultCenter] postNotificationName:@"REPORT" object:[NSString stringWithFormat:message, ##__VA_ARGS__]]
+#define EzPostProgress(value) [[NSNotificationCenter defaultCenter] postNotificationName:@"PROGRESS" object:[NSNumber numberWithInt:value]]
 
 // 構造体を「値」としてテストする際に使用します。
 struct EzSampleObjectStructValue

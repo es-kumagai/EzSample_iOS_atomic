@@ -40,6 +40,7 @@
 
 - (void)viewDidUnload
 {
+	NSLog(@"UNLOAD");
 	[super viewDidUnload];
 	
 	_logBuffer = nil;
@@ -127,14 +128,14 @@
 	{
 		[self performSelectorOnMainThread:@selector(EzUpdateLog:) withObject:nil waitUntilDone:YES];
 		
-		[NSThread sleepForTimeInterval:0.25];
+		[NSThread sleepForTimeInterval:0.10];
 	}
 	
 	// キャンセル直後にもう一度、新着ログを表示しておきます。
 	[self performSelectorOnMainThread:@selector(EzUpdateLog:) withObject:nil waitUntilDone:YES];
 	
 	_updateLogThread = nil;
-	
+
 	[NSThread exit];
 }
 
@@ -150,7 +151,7 @@
 	}
 	else
 	{
-		NSUInteger limit = 30;
+		NSUInteger limit = 10;
 	
 		text = @"";
 		
@@ -174,9 +175,9 @@
 	self.logTextView.scrollEnabled = NO;
 
 	EzPostLog(@"Testing thread-safe, checking %d times.", EzSampleViewControllerTestStep);
-	EzPostLog(@"Data size: void=%lu, long=%lu, int=%lu, long long=%lu", sizeof(void), sizeof(long), sizeof(int), sizeof(long long));
+	EzPostLog(@"Data size: void*=%lu, long=%lu, int=%lu, long long=%lu", sizeof(void*), sizeof(long), sizeof(int), sizeof(long long));
 	EzPostMark;
-	
+
 	[testInstance start];
 	
 	[self performSelectorInBackground:@selector(EzCheck:) withObject:testInstance];
@@ -223,6 +224,12 @@
 	// ログの更新処理を終了します。
 	[_updateLogThread cancel];
 	
+	// 非同期でのログ表示処理が終了するのを待ちます。
+	while (_updateLogThread)
+	{
+		[NSThread sleepForTimeInterval:0.01];
+	}
+	
 	// チェック完了処理を行います。
 	[self performSelectorOnMainThread:@selector(EzCheckDone:) withObject:testInstance waitUntilDone:NO];
 }
@@ -230,12 +237,19 @@
 - (void)EzCheckDone:(id<EzSampleObjectProtocol>)testInstance
 {
 	[testInstance stop];
-
+	
+	// 終了したことをログに直接書き込みます。
 	[_logBuffer addObject:@"Done."];
 	
+	// 最新のログとレポートを画面に表示します。
 	[self EzUpdateLog:[[NSNumber alloc] initWithBool:YES]];
 	[testInstance outputLoopCount];
+	
+	[self.menuTableViewController.tableView flashScrollIndicators];
+	[self.logTextView flashScrollIndicators];
+	[self.reportTextView flashScrollIndicators];
 
+	// 次のテストができるように、UI 機能を有効にします。
 	self.logTextView.scrollEnabled = YES;
 	_menuTableViewController.tableView.userInteractionEnabled = YES;
 }

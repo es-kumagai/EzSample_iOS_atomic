@@ -9,9 +9,13 @@
 #import "EzSampleObjectClassValue.h"
 #import "EzSampleObjectProtocol.h"
 
-static __weak NSThread* EzSampleObjectClassValueLogTargetThread = nil;
+static __unsafe_unretained NSThread* EzSampleObjectClassValueLogTargetThread = nil;
+static BOOL EzSampleObjectClassValueLoggingForce = NO;
 
-#define EzSampleObjectClassValueLogging(message,...) [[self class] logging:[[NSString alloc] initWithFormat:message, ##__VA_ARGS__]]
+static NSUInteger EzSampleObjectClassValueSerialNumber = 0;
+static NSLock* EzSampleObjectClassValueSerialNumberLock = nil;
+
+#define EzSampleObjectClassValueLogging(message,...) [[self class] logging:[NSString stringWithFormat:message, ##__VA_ARGS__]]
 
 @interface EzSampleObjectClassValue ()
 
@@ -21,11 +25,18 @@ static __weak NSThread* EzSampleObjectClassValueLogTargetThread = nil;
 
 @implementation EzSampleObjectClassValue
 
++ (void)load
+{
+	EzSampleObjectClassValueSerialNumberLock = [[NSLock alloc] init];
+}
+
 + (void)logging:(NSString *)message
 {
-	if ([NSThread currentThread] == [[self class] logTargetThread])
+	NSThread* currentThread = [NSThread currentThread];
+	
+	if (EzSampleObjectClassValueLoggingForce || currentThread == [[self class] logTargetThread])
 	{
-		NSLog(@"%@", message);
+		NSLog(@"[%p] %@", currentThread, message);
 	}
 }
 
@@ -45,11 +56,21 @@ static __weak NSThread* EzSampleObjectClassValueLogTargetThread = nil;
 	}
 }
 
++ (void)setLoggingForce:(BOOL)force
+{
+	EzSampleObjectClassValueLoggingForce = force;
+}
+
++ (BOOL)loggingForce
+{
+	return EzSampleObjectClassValueLoggingForce;
+}
+
 - (id)copyWithZone:(NSZone *)zone
 {
-	EzSampleObjectClassValueLogging(@"%@: copyed.", _label);
+	EzSampleObjectClassValueLogging(@"%@: #%u : copyed.", _label, _serial);
 	
-	EzSampleObjectClassValue* result = [[EzSampleObjectClassValue allocWithZone:zone] initWithLabel:_label];
+	EzSampleObjectClassValue* result = [[[self class] allocWithZone:zone] initWithLabel:_label];
 	
 	result->a = a;
 	result->b = b;
@@ -63,7 +84,18 @@ static __weak NSThread* EzSampleObjectClassValueLogTargetThread = nil;
 	
 	if (self)
 	{
+		valid = 0;
+		
 		_label = [label copy];
+		EzSampleObjectClassValueSerialNumber++;
+		
+		[EzSampleObjectClassValueSerialNumberLock lock];
+		
+		_serial = ++EzSampleObjectClassValueSerialNumber;
+		
+		[EzSampleObjectClassValueSerialNumberLock unlock];
+
+		EzSampleObjectClassValueLogging(@"%@: #%u : allocated.", _label, _serial);
 	}
 	
 	return self;
@@ -71,28 +103,41 @@ static __weak NSThread* EzSampleObjectClassValueLogTargetThread = nil;
 
 - (void)dealloc
 {
-	EzSampleObjectClassValueLogging(@"%@: deallocated.", _label);
+	valid = -1;
+	
+	EzSampleObjectClassValueLogging(@"%@: #%u : deallocated.", _label, _serial);
+	
+	if (_label != nil)
+	{
+		[_label release];
+	
+		_label = nil;
+	}
 	
 	[super dealloc];
 }
 
 - (id)autorelease
 {
-	EzSampleObjectClassValueLogging(@"%@: call autorelease.", _label);
+	EzSampleObjectClassValueLogging(@"%@: #%u : call autorelease.", _label, _serial);
 	
 	return [super autorelease];
 }
 
 - (id)retain
 {
-	EzSampleObjectClassValueLogging(@"%@: retained.", _label);
+//	if ([_label isEqualToString:@"ATOMIC"])
+//	{
+//		NSLog(@"[%p] %@: #%u : retained.", [NSThread currentThread], _label, _serial);
+//	}
+	EzSampleObjectClassValueLogging(@"%@: #%u : retained.", _label, _serial);
 	
 	return [super retain];
 }
 
 - (oneway void)release
 {
-	EzSampleObjectClassValueLogging(@"%@: released.", _label);
+	EzSampleObjectClassValueLogging(@"%@: #%u : released.", _label, _serial);
 
 	[super release];
 }
