@@ -36,8 +36,8 @@
 	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleClass" description:@"Test Instance variables of Objective-C Class with Strong Property Atomicity with Auto implements by @synthesize."]];
 	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleClassNonARC" description:@"Test Instance variables of Objective-C Class with Non-ARC with Strong Property Atomicity with Auto implements by @synthesize."]];
 	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleClassCopy" description:@"Test Instance variables of Objective-C Class with Copy Property Atomicity with Auto implements by @synthesize."]];
-	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleClassAssign" description:@"Test Instance variables of Objective-C Class with Non-ARC with Assign Property Atomicity with Auto implements by @synthesize."]];
 	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleClassWeak" description:@"Test Instance variables of Objective-C Class with Weak Property Atomicity with Auto implements by @synthesize."]];
+	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleClassAssign" description:@"Test Instance variables of Objective-C Class with Non-ARC with Assign Property Atomicity with Auto implements by @synthesize."]];
 	
 	_items = [items copy];
 }
