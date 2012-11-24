@@ -34,6 +34,7 @@
 		B1A85A65165D111F0041F46B /* EzSampleLong.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A64165D111F0041F46B /* EzSampleLong.m */; };
 		B1A85A6C165D167D0041F46B /* EzSampleObjectClassValue.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A6B165D167D0041F46B /* EzSampleObjectClassValue.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B1A85A70165D169E0041F46B /* EzSampleClass.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A85A6F165D169E0041F46B /* EzSampleClass.m */; };
+		B1B0C26016607ABB00B73A55 /* EzSampleClassBase.m in Sources */ = {isa = PBXBuildFile; fileRef = B1B0C25F16607ABB00B73A55 /* EzSampleClassBase.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +88,8 @@
 		B1A85A6B165D167D0041F46B /* EzSampleObjectClassValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleObjectClassValue.m; sourceTree = "<group>"; };
 		B1A85A6E165D169E0041F46B /* EzSampleClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleClass.h; sourceTree = "<group>"; };
 		B1A85A6F165D169E0041F46B /* EzSampleClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleClass.m; sourceTree = "<group>"; };
+		B1B0C25E16607ABB00B73A55 /* EzSampleClassBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleClassBase.h; sourceTree = "<group>"; };
+		B1B0C25F16607ABB00B73A55 /* EzSampleClassBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleClassBase.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +165,8 @@
 				B1A85A61165D0C2F0041F46B /* EzSampleLongLongOverrideAtomicGetter.m */,
 				B1A85A63165D111F0041F46B /* EzSampleLong.h */,
 				B1A85A64165D111F0041F46B /* EzSampleLong.m */,
+				B1B0C25E16607ABB00B73A55 /* EzSampleClassBase.h */,
+				B1B0C25F16607ABB00B73A55 /* EzSampleClassBase.m */,
 				B1A85A6E165D169E0041F46B /* EzSampleClass.h */,
 				B1A85A6F165D169E0041F46B /* EzSampleClass.m */,
 				B19A75F9165E578C00DFEC5D /* EzSampleClassNonARC.h */,
@@ -277,6 +282,7 @@
 				B19A75FB165E578D00DFEC5D /* EzSampleClassNonARC.m in Sources */,
 				B1A2D73D165F9490000DE6DE /* EzSampleClassAssign.m in Sources */,
 				B1A2D73E165F9490000DE6DE /* EzSampleClassWeak.m in Sources */,
+				B1B0C26016607ABB00B73A55 /* EzSampleClassBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
