@@ -36,7 +36,7 @@ static NSLock* EzSampleObjectClassValueSerialNumberLock = nil;
 	
 	if (EzSampleObjectClassValueLoggingForce || currentThread == [[self class] logTargetThread])
 	{
-		NSLog(@"[%p] %@", currentThread, message);
+		NSLog(@"%@", message);
 	}
 }
 
@@ -74,6 +74,7 @@ static NSLock* EzSampleObjectClassValueSerialNumberLock = nil;
 	
 	result->a = a;
 	result->b = b;
+	result->valid = valid;
 	
 	return result;
 }

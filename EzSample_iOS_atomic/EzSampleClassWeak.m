@@ -16,11 +16,22 @@
 
 @synthesize valueForReplaceByAtomicReadAndNonAtomicWrite = _valueForReplaceByAtomicReadAndNonAtomicWrite;
 
+- (id)init
+{
+	self = [super init];
+	
+	if (self)
+	{
+		self.stateStringForNil = nil;
+	}
+	
+	return self;
+}
+
 - (void)testForAtomicWithOutput:(BOOL)output outputFormat:(NSString*)outputFormat
 {
 	// Weak ポインタへの操作のため、ここでインスタンスを生成します。
-	NSString* label = [[NSString alloc] initWithCString:EzSampleClassCLabelForAtomic encoding:NSUTF8StringEncoding];
-	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:label];
+	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForAtomic];
 	
 	int number = self.loopCountOfValueForReplaceByAtomic;
 	
@@ -53,8 +64,7 @@
 - (void)testForNonAtomicWithOutput:(BOOL)output outputFormat:(NSString*)outputFormat
 {
 	// Weak ポインタへの操作のため、ここでインスタンスを生成します。
-	NSString* label = [[NSString alloc] initWithCString:EzSampleClassCLabelForNonAtomic encoding:NSUTF8StringEncoding];
-	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:label];
+	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForNonAtomic];
 	
 	int number = self.loopCountOfValueForReplaceByNonAtomic;
 
@@ -87,8 +97,7 @@
 - (void)testForAtomicReadAndNonAtomicWriteWithOutput:(BOOL)output outputFormat:(NSString*)outputFormat
 {
 	// Weak ポインタへの操作のため、ここでインスタンスを生成します。
-	NSString* label = [[NSString alloc] initWithCString:EzSampleClassCLabelForAtomicReadAndNonAtomicWrite encoding:NSUTF8StringEncoding];
-	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:label];
+	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForAtomicReadAndNonAtomicWrite];
 	
 	int number = self.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
 	
@@ -125,12 +134,12 @@
 
 - (EzSampleClassResultState)outputValueForNonAtomic
 {
-	return [self outputStructState:self.valueForReplaceByAtomic withLabel:EzSampleClassCLabelForNonAtomic];
+	return [self outputStructState:self.valueForReplaceByNonAtomic withLabel:EzSampleClassCLabelForNonAtomic];
 }
 
 - (EzSampleClassResultState)outputValueForAtomicReadAndNonAtomicWrite
 {
-	return [self outputStructState:self.valueForReplaceByAtomic withLabel:EzSampleClassCLabelForAtomicReadAndNonAtomicWrite];
+	return [self outputStructState:self.valueForReplaceByAtomicReadAndNonAtomicWrite withLabel:EzSampleClassCLabelForAtomicReadAndNonAtomicWrite];
 }
 
 @end

@@ -17,6 +17,11 @@ static const char* EzSampleClassCLabelForAtomic = "ATOMIC";
 static const char* EzSampleClassCLabelForNonAtomic = "NONATOMIC";
 static const char* EzSampleClassCLabelForAtomicReadAndNonAtomicWrite = "R:ATOM-W:DIRECT";
 
+__strong static NSString* EzSampleClassLabelForAtomic = @"ATOMIC";
+__strong static NSString* EzSampleClassLabelForNonAtomic = @"NONATOMIC";
+__strong static NSString* EzSampleClassLabelForAtomicReadAndNonAtomicWrite = @"R:ATOM-W:DIRECT";
+
+
 typedef NS_ENUM(NSInteger, EzSampleClassTestCase)
 {
 	EzSampleClassTestCaseAtomic = 0,
@@ -39,6 +44,7 @@ struct EzSampleClassOutputStruct
 	BOOL inconsistent;
 	BOOL weakNil;
 	char* errorMessage;
+	BOOL skip;
 };
 
 @interface EzSampleClassBase : NSObject <EzSampleObjectProtocol>
@@ -56,6 +62,8 @@ struct EzSampleClassOutputStruct
 	__strong NSNumberFormatter* _formatter;
 }
 
+@property (atomic,readwrite,copy) NSString* stateStringForNil;		// 既定値は @"NG" です。nil 時に成功とする場合は nil を設定します。
+
 @property (nonatomic,readwrite) int loopCountOfValueForReplaceByNonAtomic;
 @property (nonatomic,readwrite) int loopCountOfValueForReplaceByAtomic;
 @property (nonatomic,readwrite) int loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
@@ -72,12 +80,16 @@ struct EzSampleClassOutputStruct
 @property (atomic,readwrite) BOOL badAccessReplaceByAtomic;
 @property (atomic,readwrite) BOOL badAccessReplaceByAtomicReadAndNonAtomicWrite;
 
+@property (atomic,readwrite) BOOL skipLogReplaceByNonAtomic;
+@property (atomic,readwrite) BOOL skipLogReplaceByAtomic;
+@property (atomic,readwrite) BOOL skipLogReplaceByAtomicReadAndNonAtomicWrite;
+
 @property (atomic,readwrite,copy) NSString* errorMessageForReplaceByNonAtomic;
 @property (atomic,readwrite,copy) NSString* errorMessageForReplaceByAtomic;
 @property (atomic,readwrite,copy) NSString* errorMessageForReplaceByAtomicReadAndNonAtomicWrite;
 
 
-- (EzSampleClassResultState)outputStructState:(EzSampleObjectClassValue*)value withLabel:(const char*)label;
+- (EzSampleClassResultState)outputStructState:(__unsafe_unretained EzSampleObjectClassValue*)value withLabel:(const char*)label;
 - (void)outputLoopCount;
 
 - (struct EzSampleClassOutputStruct)getCreatedOutputStructForState:(EzSampleClassTestCase)state;

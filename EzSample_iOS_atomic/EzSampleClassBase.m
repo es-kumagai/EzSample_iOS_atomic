@@ -31,12 +31,14 @@
 		_formatter.numberStyle = NSNumberFormatterDecimalStyle;
 		_formatter.groupingSeparator = @",";
 		_formatter.groupingSize = 3;
+		
+		self.stateStringForNil = @"NG";
 	}
 	
 	return self;
 }
 
-- (EzSampleClassResultState)outputStructState:(EzSampleObjectClassValue*)value withLabel:(const char*)label
+- (EzSampleClassResultState)outputStructState:(__unsafe_unretained EzSampleObjectClassValue*)value withLabel:(const char*)label
 {
 	EzSampleClassResultState state;
 	
@@ -56,7 +58,7 @@
 	else
 	{
 		state = EzSampleClassResultStateWeakNil;
-		EzPostLog(@"%-15s : OK (null)", label);
+		EzPostLog(@"%-15s : %@ (null)", label, (self.stateStringForNil == nil ? @"OK" : self.stateStringForNil));
 	}
 	
 	return state;
@@ -82,6 +84,7 @@
 			result.loopCount = self.loopCountOfValueForReplaceByAtomic;
 			result.inconsistent = self.inconsistentReplaceByAtomic;
 			result.weakNil = self.weakNilReplaceByAtomic;
+			result.skip = self.skipLogReplaceByAtomic;
 			errorMessage = self.errorMessageForReplaceByAtomic;
 			break;
 			
@@ -91,6 +94,7 @@
 			result.inconsistent = self.inconsistentReplaceByNonAtomic;
 			result.weakNil = self.weakNilReplaceByNonAtomic;
 			errorMessage = self.errorMessageForReplaceByNonAtomic;
+			result.skip = self.skipLogReplaceByNonAtomic;
 			break;
 			
 		case EzSampleClassTestCaseAtomicReadAndNonAtomicWrite:
@@ -98,6 +102,7 @@
 			result.loopCount = self.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
 			result.inconsistent = self.inconsistentReplaceByAtomicReadAndNonAtomicWrite;
 			result.weakNil = self.weakNilReplaceByAtomicReadAndNonAtomicWrite;
+			result.skip = self.skipLogReplaceByAtomicReadAndNonAtomicWrite;
 			errorMessage = self.errorMessageForReplaceByAtomicReadAndNonAtomicWrite;
 			break;
 	}
@@ -135,8 +140,35 @@
 	else
 	{
 		__unsafe_unretained NSString* times = [_formatter stringFromNumber:[[NSNumber alloc] initWithInt:output.loopCount]];
-		NSString* stateString = (output.inconsistent ? @"UNSAFE" : (output.weakNil ? @"wSAFE?" : @"SAFE ?"));
-
+		NSString* stateString;
+		
+		if (output.inconsistent)
+		{
+			stateString = @"UNSAFE";
+		}
+		else if (output.weakNil)
+		{
+			if (self.stateStringForNil)
+			{
+				stateString = @"DEALOC";
+			}
+			else
+			{
+				stateString = @"wSAFE?";
+			}
+		}
+		else
+		{
+			if (output.skip)
+			{
+				stateString = @"*SKIP*";
+			}
+			else
+			{
+				stateString = @"SAFE ?";
+			}
+		}
+		
 		EzPostReport(@"%-15s : %12s times (%@)", output.label, times.UTF8String, stateString);
 	}
 	
@@ -188,7 +220,7 @@
 {
 	EzPostLog(@"");
 	
-	if (_threadForValueForReplaceByAtomic.isExecuting)
+	if (!_skipLogReplaceByAtomic)
 	{
 		switch ([self outputValueForAtomic])
 		{
@@ -209,7 +241,7 @@
 		EzPostLog(EzSampleClassOutputHeaderFormat, EzSampleClassCLabelForAtomic, @"SKIP");
 	}
 	
-	if (_threadForValueForReplaceByNonAtomic.isExecuting)
+	if (!_skipLogReplaceByNonAtomic)
 	{
 		switch ([self outputValueForNonAtomic])
 		{
@@ -230,7 +262,7 @@
 		EzPostLog(EzSampleClassOutputHeaderFormat, EzSampleClassCLabelForNonAtomic, @"SKIP");
 	}
 	
-	if (_threadForValueForReplaceByAtomicReadAndNonAtomicWrite.isExecuting)
+	if (!_skipLogReplaceByAtomicReadAndNonAtomicWrite)
 	{
 		switch ([self outputValueForAtomicReadAndNonAtomicWrite])
 		{
