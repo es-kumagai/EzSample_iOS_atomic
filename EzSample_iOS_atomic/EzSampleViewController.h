@@ -18,9 +18,14 @@
 @property (nonatomic,readonly,weak) IBOutlet UITextView* logTextView;
 @property (nonatomic,readonly,weak) IBOutlet UITextView* reportTextView;
 @property (nonatomic,readonly,weak) IBOutlet UIProgressView* progressView;
+@property (nonatomic,readonly,weak) IBOutlet UIButton* cancelButton;
+
+@property (atomic,readonly) BOOL isCanceled;
 
 @property (nonatomic,readonly,strong) IBOutlet EzSampleMenuTableViewController* menuTableViewController;
 
 - (void)clearOutputs;
+
+- (IBAction)cancelTest:(id)sender;
 
 @end

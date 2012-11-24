@@ -18,9 +18,6 @@
 
 @implementation EzSampleObject
 
-@synthesize valueForReplaceByAtomicReadAndNonAtomicWrite = _valueForReplaceByAtomicReadAndNonAtomicWrite;
-
-
 - (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
 {
 	BOOL threadSafe = (value.a == value.b);

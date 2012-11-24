@@ -11,8 +11,6 @@
 
 @interface EzSampleObject : NSObject <EzSampleObjectProtocol>
 {
-	struct EzSampleObjectStructValue _valueForReplaceByAtomicReadAndNonAtomicWrite;
-	
 	__strong NSThread* _threadForValueForReplaceByNonAtomic;
 	__strong NSThread* _threadForValueForReplaceByAtomic;
 	__strong NSThread* _threadForValueForReplaceByAtomicReadAndNonAtomicWrite;

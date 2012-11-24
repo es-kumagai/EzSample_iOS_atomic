@@ -34,7 +34,8 @@
 	[super viewDidLoad];
 	
 	_logBuffer = [[NSMutableArray alloc] init];
-	
+	self.cancelButton.enabled = NO;
+
 	[self clearOutputs];
 }
 
@@ -179,8 +180,16 @@
 	EzPostMark;
 
 	[testInstance start];
+
+	_isCanceled = NO;
+	self.cancelButton.enabled = YES;
 	
 	[self performSelectorInBackground:@selector(EzCheck:) withObject:testInstance];
+}
+
+- (void)cancelTest:(id)sender
+{
+	_isCanceled = YES;
 }
 
 - (void)EzCheck:(id<EzSampleObjectProtocol>)testInstance
@@ -195,7 +204,7 @@
 	
 	@try
 	{
-		while (step--)
+		while (!self.isCanceled && step-- != 0)
 		{
 			if (step % 100 == 0)
 			{
@@ -206,7 +215,15 @@
 		}
 		
 		EzPostMark;
-		EzPostLog(@"This check has been finished successfully.");
+		
+		if (self.isCanceled)
+		{
+			EzPostLog(@"This check has been CANCELLED.");
+		}
+		else
+		{
+			EzPostLog(@"This check has been finished successfully.");
+		}
 	}
 	@catch (NSException* exception)
 	{
@@ -239,7 +256,7 @@
 	[testInstance stop];
 	
 	// 終了したことをログに直接書き込みます。
-	[_logBuffer addObject:@"Done."];
+	[_logBuffer addObject:(self.isCanceled ? @"Cancelled." : @"Done.")];
 	
 	// 最新のログとレポートを画面に表示します。
 	[self EzUpdateLog:[[NSNumber alloc] initWithBool:YES]];
@@ -252,6 +269,9 @@
 	// 次のテストができるように、UI 機能を有効にします。
 	self.logTextView.scrollEnabled = YES;
 	_menuTableViewController.tableView.userInteractionEnabled = YES;
+
+	// キャンセルボタンは無効にします。
+	self.cancelButton.enabled = NO;
 }
 
 @end

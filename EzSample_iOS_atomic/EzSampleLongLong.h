@@ -12,7 +12,6 @@
 @interface EzSampleLongLong : NSObject <EzSampleObjectProtocol>
 {
 	long long _valueForReplaceByAtomic;
-//	long long _valueForReplaceByAtomicReadAndNonAtomicWrite;
 	
 	__strong NSThread* _threadForValueForReplaceByNonAtomic;
 	__strong NSThread* _threadForValueForReplaceByAtomic;
