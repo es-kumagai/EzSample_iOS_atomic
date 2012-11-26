@@ -10,8 +10,10 @@
 
 @interface EzSampleClassWeak : EzSampleClassBase
 {
-	@public
+	@protected
 	
+	__weak EzSampleObjectClassValue* _valueForReplaceByAtomic;
+	__weak EzSampleObjectClassValue* _valueForReplaceByNonAtomic;
 	__weak EzSampleObjectClassValue* _valueForReplaceByAtomicReadAndNonAtomicWrite;
 }
 

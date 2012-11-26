@@ -8,7 +8,7 @@
 
 #import "EzSampleClassBase.h"
 
-@interface EzSampleClass : EzSampleClassBase
+@interface EzSampleClassWithoutCopyInRWLoop : EzSampleClassBase
 {
 @protected
 	

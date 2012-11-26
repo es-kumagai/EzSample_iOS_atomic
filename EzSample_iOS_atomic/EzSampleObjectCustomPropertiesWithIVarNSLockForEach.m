@@ -6,9 +6,9 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObjectCustomProperties.h"
+#import "EzSampleObjectCustomPropertiesWithIVarNSLockForEach.h"
 
-@interface EzSampleObjectCustomProperties ()
+@interface EzSampleObjectCustomPropertiesWithIVarNSLockForEach ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,11 +16,28 @@
 
 @end
 
-@implementation EzSampleObjectCustomProperties
+@implementation EzSampleObjectCustomPropertiesWithIVarNSLockForEach
+
+- (id)init
+{
+	self = [super init];
+	
+	if (self)
+	{
+		_lockForAtomic = [[NSLock alloc] init];
+		_lockForAtomicReadAndNonAtomicWrite = [[NSLock alloc] init];
+	}
+	
+	return self;
+}
 
 - (void)setValueForReplaceByAtomic:(struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
+	[_lockForAtomic lock];
+	
 	_valueForReplaceByAtomic = valueForReplaceByAtomic;
+
+	[_lockForAtomic unlock];
 }
 
 - (void)setValueForReplaceByNonAtomic:(struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -35,7 +52,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
-	return _valueForReplaceByAtomic;
+	struct EzSampleObjectStructValue result;
+	
+	[_lockForAtomic lock];
+
+	result = _valueForReplaceByAtomic;
+	
+	[_lockForAtomic unlock];
+
+	return result;
 }
 
 - (struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -45,7 +70,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
 {
-	return _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	struct EzSampleObjectStructValue result;
+	
+	[_lockForAtomicReadAndNonAtomicWrite lock];
+	
+	result = _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	
+	[_lockForAtomicReadAndNonAtomicWrite unlock];
+	
+	return result;
 }
 
 - (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
@@ -92,7 +125,7 @@
 {
 	NSString* labelForAtomic = @"ATOMIC";
 	NSString* labelForNonAtomic = @"NONATOMIC";
-	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"R:ATOM-W:DIRECT"];
+	NSString* labelForAtomicReadAndNonAtomicWrite = @"R:ATOM-W:DIRECT";
 	
 	EzPostLog(@"");
 	

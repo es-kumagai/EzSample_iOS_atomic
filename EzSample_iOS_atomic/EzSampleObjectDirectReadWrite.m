@@ -1,14 +1,14 @@
 //
-//  EzSampleObjectCustomProperties.m
+//  EzSampleObject.m
 //  EzSample_iOS_atomic
 //
 //  Created by 熊谷 友宏 on H.24/11/21.
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObjectCustomProperties.h"
+#import "EzSampleObjectDirectReadWrite.h"
 
-@interface EzSampleObjectCustomProperties ()
+@interface EzSampleObjectDirectReadWrite ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,42 +16,12 @@
 
 @end
 
-@implementation EzSampleObjectCustomProperties
-
-- (void)setValueForReplaceByAtomic:(struct EzSampleObjectStructValue)valueForReplaceByAtomic
-{
-	_valueForReplaceByAtomic = valueForReplaceByAtomic;
-}
-
-- (void)setValueForReplaceByNonAtomic:(struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
-{
-	_valueForReplaceByNonAtomic = valueForReplaceByNonAtomic;
-}
-
-- (void)setValueForReplaceByAtomicReadAndNonAtomicWrite:(struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
-{
-	_valueForReplaceByAtomicReadAndNonAtomicWrite = valueForReplaceByAtomicReadAndNonAtomicWrite;
-}
-
-- (struct EzSampleObjectStructValue)valueForReplaceByAtomic
-{
-	return _valueForReplaceByAtomic;
-}
-
-- (struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
-{
-	return _valueForReplaceByNonAtomic;
-}
-
-- (struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
-{
-	return _valueForReplaceByAtomicReadAndNonAtomicWrite;
-}
+@implementation EzSampleObjectDirectReadWrite
 
 - (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
 {
 	BOOL threadSafe = (value.a == value.b);
-	
+
 	EzPostLog(@"%-15s : %2s (%d,%d)", label.UTF8String, (threadSafe ? "OK" : "NG"), value.a, value.b);
 	
 	return threadSafe;
@@ -75,7 +45,7 @@
 	_threadForValueForReplaceByNonAtomic = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByNonAtomic:) object:nil];
 	_threadForValueForReplaceByAtomic = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByAtomic:) object:nil];
 	_threadForValueForReplaceByAtomicReadAndNonAtomicWrite = [[NSThread alloc] initWithTarget:self selector:@selector(EzThreadLoopForValueForReplaceByAtomicReadAndNonAtomicWrite:) object:nil];
-	
+
 	[_threadForValueForReplaceByNonAtomic start];
 	[_threadForValueForReplaceByAtomic start];
 	[_threadForValueForReplaceByAtomicReadAndNonAtomicWrite start];
@@ -92,7 +62,7 @@
 {
 	NSString* labelForAtomic = @"ATOMIC";
 	NSString* labelForNonAtomic = @"NONATOMIC";
-	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"R:ATOM-W:DIRECT"];
+	NSString* labelForAtomicReadAndNonAtomicWrite = @"R:ATOM-W:DIRECT";
 	
 	EzPostLog(@"");
 	
@@ -109,12 +79,12 @@
 	{
 		_loopCountOfValueForReplaceByNonAtomic++;
 		
-		struct EzSampleObjectStructValue value = self.valueForReplaceByNonAtomic;
+		struct EzSampleObjectStructValue value = _valueForReplaceByNonAtomic;
 		
 		value.a = _loopCountOfValueForReplaceByNonAtomic;
 		value.b = _loopCountOfValueForReplaceByNonAtomic;
 		
-		self.valueForReplaceByNonAtomic = value;
+		_valueForReplaceByNonAtomic = value;
 	}
 	
 	_threadForValueForReplaceByNonAtomic = nil;
@@ -130,12 +100,12 @@
 	{
 		_loopCountOfValueForReplaceByAtomic++;
 		
-		struct EzSampleObjectStructValue value = self.valueForReplaceByAtomic;
+		struct EzSampleObjectStructValue value = _valueForReplaceByAtomic;
 		
 		value.a = _loopCountOfValueForReplaceByAtomic;
 		value.b = _loopCountOfValueForReplaceByAtomic;
 		
-		self.valueForReplaceByAtomic = value;
+		_valueForReplaceByAtomic = value;
 	}
 	
 	_threadForValueForReplaceByAtomic = nil;
@@ -151,7 +121,7 @@
 	{
 		_loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite++;
 		
-		struct EzSampleObjectStructValue value = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
+		struct EzSampleObjectStructValue value = _valueForReplaceByAtomicReadAndNonAtomicWrite;
 		
 		value.a = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
 		value.b = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;

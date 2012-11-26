@@ -15,9 +15,4 @@
 	return _valueForReplaceByAtomic;
 }
 
-//- (void)setValueForReplaceByAtomic:(long long)valueForReplaceByAtomic
-//{
-//	_valueForReplaceByAtomic = valueForReplaceByAtomic;
-//}
-
 @end

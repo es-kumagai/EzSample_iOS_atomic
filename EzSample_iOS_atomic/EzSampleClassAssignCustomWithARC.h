@@ -8,7 +8,7 @@
 
 #import "EzSampleClassBase.h"
 
-@interface EzSampleClassAssign : EzSampleClassBase
+@interface EzSampleClassAssignCustomWithARC : EzSampleClassBase
 {
 @protected
 	
@@ -20,5 +20,8 @@
 @property (nonatomic,readwrite,assign) EzSampleObjectClassValue* valueForReplaceByNonAtomic;
 @property (atomic,readwrite,assign) EzSampleObjectClassValue* valueForReplaceByAtomic;
 @property (atomic,readonly,assign) EzSampleObjectClassValue* valueForReplaceByAtomicReadAndNonAtomicWrite;
+
+//- (void)setValueForReplaceByAtomic:(__unsafe_unretained EzSampleObjectClassValue *)valueForReplaceByAtomic;
+//- (EzSampleObjectClassValue*)valueForReplaceByAtomic NS_RETURNS_INNER_POINTER;
 
 @end

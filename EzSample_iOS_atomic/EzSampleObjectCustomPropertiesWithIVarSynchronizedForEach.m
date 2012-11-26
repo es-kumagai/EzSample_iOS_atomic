@@ -6,9 +6,9 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObjectCustomProperties.h"
+#import "EzSampleObjectCustomPropertiesWithIVarSynchronizedForEach.h"
 
-@interface EzSampleObjectCustomProperties ()
+@interface EzSampleObjectCustomPropertiesWithIVarSynchronizedForEach ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,11 +16,27 @@
 
 @end
 
-@implementation EzSampleObjectCustomProperties
+@implementation EzSampleObjectCustomPropertiesWithIVarSynchronizedForEach
+
+- (id)init
+{
+	self = [super init];
+	
+	if (self)
+	{
+		_lockForAtomic = [[NSObject alloc] init];
+		_lockForAtomicReadAndNonAtomicWrite = [[NSObject alloc] init];
+	}
+	
+	return self;
+}
 
 - (void)setValueForReplaceByAtomic:(struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
-	_valueForReplaceByAtomic = valueForReplaceByAtomic;
+	@synchronized (_lockForAtomic)
+	{
+		_valueForReplaceByAtomic = valueForReplaceByAtomic;
+	}
 }
 
 - (void)setValueForReplaceByNonAtomic:(struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -35,7 +51,10 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
-	return _valueForReplaceByAtomic;
+	@synchronized (_lockForAtomic)
+	{
+		return _valueForReplaceByAtomic;
+	}
 }
 
 - (struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -45,7 +64,10 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
 {
-	return _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	@synchronized (_lockForAtomicReadAndNonAtomicWrite)
+	{
+		return _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	}
 }
 
 - (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
@@ -92,7 +114,7 @@
 {
 	NSString* labelForAtomic = @"ATOMIC";
 	NSString* labelForNonAtomic = @"NONATOMIC";
-	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"R:ATOM-W:DIRECT"];
+	NSString* labelForAtomicReadAndNonAtomicWrite = @"R:ATOM-W:DIRECT";
 	
 	EzPostLog(@"");
 	

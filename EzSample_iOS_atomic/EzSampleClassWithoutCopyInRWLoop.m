@@ -6,13 +6,13 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleClassWeak.h"
+#import "EzSampleClassWithoutCopyInRWLoop.h"
 
-@interface EzSampleClassWeak ()
+@interface EzSampleClassWithoutCopyInRWLoop ()
 
 @end
 
-@implementation EzSampleClassWeak
+@implementation EzSampleClassWithoutCopyInRWLoop
 
 @synthesize valueForReplaceByAtomic = _valueForReplaceByAtomic;
 @synthesize valueForReplaceByNonAtomic = _valueForReplaceByNonAtomic;
@@ -24,7 +24,12 @@
 	
 	if (self)
 	{
-		self.stateStringForNil = nil;
+		_valueForReplaceByAtomic = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForAtomic];
+		_valueForReplaceByNonAtomic = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForNonAtomic];
+		_valueForReplaceByAtomicReadAndNonAtomicWrite = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForAtomicReadAndNonAtomicWrite];
+		
+//		self.skipLogReplaceByNonAtomic = YES;
+//		self.skipLogReplaceByAtomicReadAndNonAtomicWrite = YES;
 	}
 	
 	return self;
@@ -32,101 +37,89 @@
 
 - (void)testForAtomicWithOutput:(BOOL)output outputFormat:(NSString*)outputFormat
 {
-	// Weak ポインタへの操作のため、ここでインスタンスを生成します。
-	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForAtomic];
-	
-	int number = self.loopCountOfValueForReplaceByAtomic;
-	
-	value->a = number;
-	value->b = number;
-	
-	if (output) NSLog(outputFormat, @"Property will write.");
-	self.valueForReplaceByAtomic = value;
-	if (output) NSLog(outputFormat, @"Property did write.");
-	
 	@autoreleasepool
 	{
 		// ローカルスコープを定義します。
 		{
 			if (output) NSLog(outputFormat, @"Property will read.");
-			EzSampleObjectClassValue* temp = self.valueForReplaceByAtomic;
+			EzSampleObjectClassValue* value = self.valueForReplaceByAtomic;
 			if (output) NSLog(outputFormat, @"Property did read.");
-			if (output) NSLog(outputFormat, temp);
 			
-			if (output) NSLog(@"outputFormat, Will End of local scope.");
+			int number = self.loopCountOfValueForReplaceByAtomic;
+
+			value->a = number;
+			value->b = number;
+			
+			if (output) NSLog(outputFormat, @"Property will write.");
+			self.valueForReplaceByAtomic = value;
+			if (output) NSLog(outputFormat, @"Property did write.");
+			
+			if (output) NSLog(outputFormat, @"Will End of local scope.");
 		}
 		
 		if (output) NSLog(outputFormat, @"Did End of local scope.");
 		if (output) NSLog(outputFormat, @"Will End of autorelease pool.");
 	}
 	
-	if (output) NSLog(outputFormat, @"End of autorelease pool.");
+	if (output) NSLog(outputFormat, @"Did End of autorelease pool.");
 }
 
 - (void)testForNonAtomicWithOutput:(BOOL)output outputFormat:(NSString*)outputFormat
 {
-	// Weak ポインタへの操作のため、ここでインスタンスを生成します。
-	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForNonAtomic];
-	
-	int number = self.loopCountOfValueForReplaceByNonAtomic;
-
-	value->a = number;
-	value->b = number;
-	
-	if (output) NSLog(outputFormat, @"Property will write.");
-	self.valueForReplaceByNonAtomic = value;
-	if (output) NSLog(outputFormat, @"Property did write.");
-	
 	@autoreleasepool
 	{
 		// ローカルスコープを定義します。
 		{
 			if (output) NSLog(outputFormat, @"Property will read.");
-			EzSampleObjectClassValue* temp = self.valueForReplaceByNonAtomic;
+			EzSampleObjectClassValue* value = self.valueForReplaceByNonAtomic;
 			if (output) NSLog(outputFormat, @"Property did read.");
-			if (output) NSLog(outputFormat, temp);
+						
+			int number = self.loopCountOfValueForReplaceByNonAtomic;
 			
-			if (output) NSLog(@"outputFormat, Will End of local scope.");
+			value->a = number;
+			value->b = number;
+			
+			if (output) NSLog(outputFormat, @"Property will write.");
+			self.valueForReplaceByNonAtomic = value;
+			if (output) NSLog(outputFormat, @"Property did write.");
+			
+			if (output) NSLog(outputFormat, @"Will End of local scope.");
 		}
 		
 		if (output) NSLog(outputFormat, @"Did End of local scope.");
 		if (output) NSLog(outputFormat, @"Will End of autorelease pool.");
 	}
 	
-	if (output) NSLog(outputFormat, @"End of autorelease pool.");
+	if (output) NSLog(outputFormat, @"Did End of autorelease pool.");
 }
 
 - (void)testForAtomicReadAndNonAtomicWriteWithOutput:(BOOL)output outputFormat:(NSString*)outputFormat
 {
-	// Weak ポインタへの操作のため、ここでインスタンスを生成します。
-	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForAtomicReadAndNonAtomicWrite];
-	
-	int number = self.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
-	
-	value->a = number;
-	value->b = number;
-	
-	if (output) NSLog(outputFormat, @"Property will write.");
-	_valueForReplaceByAtomicReadAndNonAtomicWrite = value;
-	if (output) NSLog(outputFormat, @"Property did write.");
-	
 	@autoreleasepool
 	{
 		// ローカルスコープを定義します。
 		{
 			if (output) NSLog(outputFormat, @"Property will read.");
-			EzSampleObjectClassValue* temp = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
+			EzSampleObjectClassValue* value = self.valueForReplaceByAtomicReadAndNonAtomicWrite;
 			if (output) NSLog(outputFormat, @"Property did read.");
-			if (output) NSLog(outputFormat, temp);
 			
-			if (output) NSLog(@"outputFormat, Will End of local scope.");
+			int number = self.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
+			
+			value->a = number;
+			value->b = number;
+			
+			if (output) NSLog(outputFormat, @"Property will write.");
+			_valueForReplaceByAtomicReadAndNonAtomicWrite = value;
+			if (output) NSLog(outputFormat, @"Property did write.");
+			
+			if (output) NSLog(outputFormat, @"Will End of local scope.");
 		}
 		
 		if (output) NSLog(outputFormat, @"Did End of local scope.");
 		if (output) NSLog(outputFormat, @"Will End of autorelease pool.");
 	}
 	
-	if (output) NSLog(outputFormat, @"End of autorelease pool.");
+	if (output) NSLog(outputFormat, @"Did End of autorelease pool.");
 }
 
 - (EzSampleClassResultState)outputValueForAtomic

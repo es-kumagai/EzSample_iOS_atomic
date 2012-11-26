@@ -6,9 +6,9 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObjectCustomProperties.h"
+#import "EzSampleObjectCustomPropertiesWithIVarSingleSemaphoreWithoutSleep.h"
 
-@interface EzSampleObjectCustomProperties ()
+@interface EzSampleObjectCustomPropertiesWithIVarSingleSemaphoreWithoutSleep ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,11 +16,32 @@
 
 @end
 
-@implementation EzSampleObjectCustomProperties
+@implementation EzSampleObjectCustomPropertiesWithIVarSingleSemaphoreWithoutSleep
+
+- (id)init
+{
+	self = [super init];
+	
+	if (self)
+	{
+		_semaphore = dispatch_semaphore_create(1);
+	}
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	dispatch_release(_semaphore);
+}
 
 - (void)setValueForReplaceByAtomic:(struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
+	dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
+	
 	_valueForReplaceByAtomic = valueForReplaceByAtomic;
+
+	dispatch_semaphore_signal(_semaphore);
 }
 
 - (void)setValueForReplaceByNonAtomic:(struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -35,7 +56,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
-	return _valueForReplaceByAtomic;
+	struct EzSampleObjectStructValue result;
+	
+	dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
+	
+	result = _valueForReplaceByAtomic;
+
+	dispatch_semaphore_signal(_semaphore);
+
+	return result;
 }
 
 - (struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -45,7 +74,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
 {
-	return _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	struct EzSampleObjectStructValue result;
+	
+	dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
+	
+	result = _valueForReplaceByAtomicReadAndNonAtomicWrite;
+
+	dispatch_semaphore_signal(_semaphore);
+	
+	return result;
 }
 
 - (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
@@ -92,7 +129,7 @@
 {
 	NSString* labelForAtomic = @"ATOMIC";
 	NSString* labelForNonAtomic = @"NONATOMIC";
-	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"R:ATOM-W:DIRECT"];
+	NSString* labelForAtomicReadAndNonAtomicWrite = @"R:ATOM-W:DIRECT";
 	
 	EzPostLog(@"");
 	

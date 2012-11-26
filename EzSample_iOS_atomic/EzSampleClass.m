@@ -14,6 +14,8 @@
 
 @implementation EzSampleClass
 
+@synthesize valueForReplaceByAtomic = _valueForReplaceByAtomic;
+@synthesize valueForReplaceByNonAtomic = _valueForReplaceByNonAtomic;
 @synthesize valueForReplaceByAtomicReadAndNonAtomicWrite = _valueForReplaceByAtomicReadAndNonAtomicWrite;
 
 - (id)init

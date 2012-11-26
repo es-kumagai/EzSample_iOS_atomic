@@ -144,7 +144,14 @@
 		
 		if (output.inconsistent)
 		{
-			stateString = @"UNSAFE";
+			if (output.weakNil && self.stateStringForNil != nil)
+			{
+				stateString = @"DEALOC";
+			}
+			else
+			{
+				stateString = @"UNSAFE";
+			}
 		}
 		else if (output.weakNil)
 		{
@@ -216,7 +223,7 @@
 	return EzSampleClassResultStateInconsistent;	
 }
 
-- (void)outputWithLabel:(NSString *)label
+- (void)output
 {
 	EzPostLog(@"");
 	
@@ -309,28 +316,31 @@
 		
 		while (!currentThread.isCancelled)
 		{
-			_loopCountOfValueForReplaceByNonAtomic++;
-			
-			// ログ出力すべきタイミングかを調べます。
-			if (_loggingCountForReplaceByNonAtomic == 0)
+			@autoreleasepool
 			{
-				if ([EzSampleObjectClassValue logTargetThread] == currentThread)
+				_loopCountOfValueForReplaceByNonAtomic++;
+				
+				// ログ出力すべきタイミングかを調べます。
+				if (_loggingCountForReplaceByNonAtomic == 0)
 				{
-					_loggingCountForReplaceByNonAtomic = 1;
+					if ([EzSampleObjectClassValue logTargetThread] == currentThread)
+					{
+						_loggingCountForReplaceByNonAtomic = 1;
+					}
 				}
-			}
-			else
-			{
-				_loggingCountForReplaceByNonAtomic++;
-			}
-			
-			BOOL logging = (_loggingCountForReplaceByNonAtomic > 0 && _loggingCountForReplaceByNonAtomic <= EzSampleClassBaseLoggingCount);
-			
-			[self testForNonAtomicWithOutput:logging outputFormat:outputFormat];
-			
-			if (_loggingCountForReplaceByNonAtomic == EzSampleClassBaseLoggingCount)
-			{
-				[EzSampleObjectClassValue setLogTargetThread:nil];
+				else
+				{
+					_loggingCountForReplaceByNonAtomic++;
+				}
+				
+				BOOL logging = (_loggingCountForReplaceByNonAtomic > 0 && _loggingCountForReplaceByNonAtomic <= EzSampleClassBaseLoggingCount);
+				
+				[self testForNonAtomicWithOutput:logging outputFormat:outputFormat];
+				
+				if (_loggingCountForReplaceByNonAtomic == EzSampleClassBaseLoggingCount)
+				{
+					[EzSampleObjectClassValue setLogTargetThread:nil];
+				}
 			}
 		}
 	}
@@ -341,8 +351,6 @@
 	}
 	
 	_threadForValueForReplaceByNonAtomic = nil;
-	
-	[NSThread exit];
 }
 
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object
@@ -355,28 +363,31 @@
 		
 		while (!currentThread.isCancelled)
 		{
-			_loopCountOfValueForReplaceByAtomic++;
-			
-			// ログ出力すべきタイミングかを調べます。
-			if (_loggingCountForReplaceByAtomic == 0)
+			@autoreleasepool
 			{
-				if ([EzSampleObjectClassValue logTargetThread] == currentThread)
+				_loopCountOfValueForReplaceByAtomic++;
+				
+				// ログ出力すべきタイミングかを調べます。
+				if (_loggingCountForReplaceByAtomic == 0)
 				{
-					_loggingCountForReplaceByAtomic = 1;
+					if ([EzSampleObjectClassValue logTargetThread] == currentThread)
+					{
+						_loggingCountForReplaceByAtomic = 1;
+					}
 				}
-			}
-			else
-			{
-				_loggingCountForReplaceByAtomic++;
-			}
-			
-			BOOL logging = (_loggingCountForReplaceByAtomic > 0 && _loggingCountForReplaceByAtomic <= EzSampleClassBaseLoggingCount);
-			
-			[self testForAtomicWithOutput:logging outputFormat:outputFormat];
-			
-			if (_loggingCountForReplaceByAtomic == EzSampleClassBaseLoggingCount)
-			{
-				[EzSampleObjectClassValue setLogTargetThread:_threadForValueForReplaceByNonAtomic];
+				else
+				{
+					_loggingCountForReplaceByAtomic++;
+				}
+				
+				BOOL logging = (_loggingCountForReplaceByAtomic > 0 && _loggingCountForReplaceByAtomic <= EzSampleClassBaseLoggingCount);
+				
+				[self testForAtomicWithOutput:logging outputFormat:outputFormat];
+				
+				if (_loggingCountForReplaceByAtomic == EzSampleClassBaseLoggingCount)
+				{
+					[EzSampleObjectClassValue setLogTargetThread:_threadForValueForReplaceByNonAtomic];
+				}
 			}
 		}
 	}
@@ -387,8 +398,6 @@
 	}
 
 	_threadForValueForReplaceByAtomic = nil;
-	
-	[NSThread exit];
 }
 
 - (void)EzThreadLoopForValueForReplaceByAtomicReadAndNonAtomicWrite:(id)object
@@ -401,28 +410,31 @@
 		
 		while (!currentThread.isCancelled)
 		{
-			_loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite++;
-			
-			// ログ出力すべきタイミングかを調べます。
-			if (_loggingCountForReplaceByAtomicReadAndNonAtomicWrite == 0)
+			@autoreleasepool
 			{
-				if ([EzSampleObjectClassValue logTargetThread] == currentThread)
+				_loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite++;
+				
+				// ログ出力すべきタイミングかを調べます。
+				if (_loggingCountForReplaceByAtomicReadAndNonAtomicWrite == 0)
 				{
-					_loggingCountForReplaceByAtomicReadAndNonAtomicWrite = 1;
+					if ([EzSampleObjectClassValue logTargetThread] == currentThread)
+					{
+						_loggingCountForReplaceByAtomicReadAndNonAtomicWrite = 1;
+					}
 				}
-			}
-			else
-			{
-				_loggingCountForReplaceByAtomicReadAndNonAtomicWrite++;
-			}
-			
-			BOOL logging = (_loggingCountForReplaceByAtomicReadAndNonAtomicWrite > 0 && _loggingCountForReplaceByAtomicReadAndNonAtomicWrite <= EzSampleClassBaseLoggingCount);
-			
-			[self testForAtomicReadAndNonAtomicWriteWithOutput:logging outputFormat:outputFormat];
-			
-			if (_loggingCountForReplaceByAtomicReadAndNonAtomicWrite == EzSampleClassBaseLoggingCount)
-			{
-				[EzSampleObjectClassValue setLogTargetThread:nil];
+				else
+				{
+					_loggingCountForReplaceByAtomicReadAndNonAtomicWrite++;
+				}
+				
+				BOOL logging = (_loggingCountForReplaceByAtomicReadAndNonAtomicWrite > 0 && _loggingCountForReplaceByAtomicReadAndNonAtomicWrite <= EzSampleClassBaseLoggingCount);
+				
+				[self testForAtomicReadAndNonAtomicWriteWithOutput:logging outputFormat:outputFormat];
+				
+				if (_loggingCountForReplaceByAtomicReadAndNonAtomicWrite == EzSampleClassBaseLoggingCount)
+				{
+					[EzSampleObjectClassValue setLogTargetThread:nil];
+				}
 			}
 		}
 	}
@@ -433,8 +445,6 @@
 	}
 	
 	_threadForValueForReplaceByAtomicReadAndNonAtomicWrite = nil;
-	
-	[NSThread exit];
 }
 
 @end

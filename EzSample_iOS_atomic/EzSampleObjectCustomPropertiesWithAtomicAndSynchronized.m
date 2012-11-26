@@ -76,11 +76,11 @@
 	[_threadForValueForReplaceByAtomicReadAndNonAtomicWrite cancel];
 }
 
-- (void)outputWithLabel:(NSString *)label
+- (void)output
 {
-	NSString* labelForAtomic = [[NSString alloc] initWithFormat:@"%@ATOMIC", label];
-	NSString* labelForNonAtomic = [[NSString alloc] initWithFormat:@"%@NONATOMIC", label];
-	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"%@R:ATOM-W:DIRECT", label];
+	NSString* labelForAtomic = @"ATOMIC";
+	NSString* labelForNonAtomic = @"NONATOMIC";
+	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"R:ATOM-W:DIRECT"];
 	
 	EzPostLog(@"");
 	

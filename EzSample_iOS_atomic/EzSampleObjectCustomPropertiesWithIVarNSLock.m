@@ -6,9 +6,9 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObjectCustomProperties.h"
+#import "EzSampleObjectCustomPropertiesWithIVarNSLock.h"
 
-@interface EzSampleObjectCustomProperties ()
+@interface EzSampleObjectCustomPropertiesWithIVarNSLock ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,11 +16,27 @@
 
 @end
 
-@implementation EzSampleObjectCustomProperties
+@implementation EzSampleObjectCustomPropertiesWithIVarNSLock
+
+- (id)init
+{
+	self = [super init];
+	
+	if (self)
+	{
+		_lock = [[NSLock alloc] init];
+	}
+	
+	return self;
+}
 
 - (void)setValueForReplaceByAtomic:(struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
+	[_lock lock];
+	
 	_valueForReplaceByAtomic = valueForReplaceByAtomic;
+
+	[_lock unlock];
 }
 
 - (void)setValueForReplaceByNonAtomic:(struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -35,7 +51,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
-	return _valueForReplaceByAtomic;
+	struct EzSampleObjectStructValue result;
+	
+	[_lock lock];
+
+	result = _valueForReplaceByAtomic;
+	
+	[_lock unlock];
+
+	return result;
 }
 
 - (struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -45,7 +69,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
 {
-	return _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	struct EzSampleObjectStructValue result;
+	
+	[_lock lock];
+	
+	result = _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	
+	[_lock unlock];
+	
+	return result;
 }
 
 - (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
@@ -92,7 +124,7 @@
 {
 	NSString* labelForAtomic = @"ATOMIC";
 	NSString* labelForNonAtomic = @"NONATOMIC";
-	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"R:ATOM-W:DIRECT"];
+	NSString* labelForAtomicReadAndNonAtomicWrite = @"R:ATOM-W:DIRECT";
 	
 	EzPostLog(@"");
 	

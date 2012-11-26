@@ -6,17 +6,13 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleClassWeak.h"
+#import "EzSampleClassAssignCustomWithARC.h"
 
-@interface EzSampleClassWeak ()
+@interface EzSampleClassAssignCustomWithARC ()
 
 @end
 
-@implementation EzSampleClassWeak
-
-@synthesize valueForReplaceByAtomic = _valueForReplaceByAtomic;
-@synthesize valueForReplaceByNonAtomic = _valueForReplaceByNonAtomic;
-@synthesize valueForReplaceByAtomicReadAndNonAtomicWrite = _valueForReplaceByAtomicReadAndNonAtomicWrite;
+@implementation EzSampleClassAssignCustomWithARC
 
 - (id)init
 {
@@ -24,15 +20,55 @@
 	
 	if (self)
 	{
-		self.stateStringForNil = nil;
+		self.skipLogReplaceByAtomic = YES;
+		self.skipLogReplaceByNonAtomic = YES;
+		self.skipLogReplaceByAtomicReadAndNonAtomicWrite = YES;
 	}
 	
 	return self;
 }
 
+- (void)setValueForReplaceByAtomic:(__unsafe_unretained EzSampleObjectClassValue *)valueForReplaceByAtomic
+{
+	@synchronized (self)
+	{
+		_valueForReplaceByAtomic = valueForReplaceByAtomic;
+	}
+}
+
+- (void)setValueForReplaceByNonAtomic:(__unsafe_unretained EzSampleObjectClassValue *)valueForReplaceByNonAtomic
+{
+	_valueForReplaceByNonAtomic = valueForReplaceByNonAtomic;
+}
+
+- (void)setValueForReplaceByAtomicReadAndNonAtomicWrite:(__unsafe_unretained EzSampleObjectClassValue *)valueForReplaceByAtomicReadAndNonAtomicWrite
+{
+	_valueForReplaceByAtomicReadAndNonAtomicWrite = valueForReplaceByAtomicReadAndNonAtomicWrite;
+}
+
+- (EzSampleObjectClassValue*)valueForReplaceByAtomic
+{
+	@synchronized (self)
+	{
+		return _valueForReplaceByAtomic;
+	}
+}
+
+- (EzSampleObjectClassValue*)valueForReplaceByNonAtomic
+{
+	return _valueForReplaceByNonAtomic;
+}
+
+- (EzSampleObjectClassValue*)valueForReplaceByAtomicReadAndNonAtomicWrite
+{
+	@synchronized (self)
+	{
+		return _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	}
+}
+
 - (void)testForAtomicWithOutput:(BOOL)output outputFormat:(NSString*)outputFormat
 {
-	// Weak ポインタへの操作のため、ここでインスタンスを生成します。
 	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForAtomic];
 	
 	int number = self.loopCountOfValueForReplaceByAtomic;
@@ -65,11 +101,10 @@
 
 - (void)testForNonAtomicWithOutput:(BOOL)output outputFormat:(NSString*)outputFormat
 {
-	// Weak ポインタへの操作のため、ここでインスタンスを生成します。
 	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForNonAtomic];
 	
 	int number = self.loopCountOfValueForReplaceByNonAtomic;
-
+	
 	value->a = number;
 	value->b = number;
 	
@@ -98,7 +133,6 @@
 
 - (void)testForAtomicReadAndNonAtomicWriteWithOutput:(BOOL)output outputFormat:(NSString*)outputFormat
 {
-	// Weak ポインタへの操作のため、ここでインスタンスを生成します。
 	EzSampleObjectClassValue* value = [[EzSampleObjectClassValue alloc] initWithLabel:EzSampleClassLabelForAtomicReadAndNonAtomicWrite];
 	
 	int number = self.loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;

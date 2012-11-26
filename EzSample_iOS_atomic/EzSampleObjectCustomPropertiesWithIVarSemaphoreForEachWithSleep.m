@@ -6,9 +6,11 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObjectCustomProperties.h"
+#import "EzSampleObjectCustomPropertiesWithIVarSemaphoreForEachWithSleep.h"
 
-@interface EzSampleObjectCustomProperties ()
+#define EzSampleObjectCustomPropertiesWithSleepInterval 0.0000001
+
+@interface EzSampleObjectCustomPropertiesWithIVarSemaphoreForEachWithSleep ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,11 +18,34 @@
 
 @end
 
-@implementation EzSampleObjectCustomProperties
+@implementation EzSampleObjectCustomPropertiesWithIVarSemaphoreForEachWithSleep
+
+- (id)init
+{
+	self = [super init];
+	
+	if (self)
+	{
+		_semaphoreForAtomic = dispatch_semaphore_create(1);
+		_semaphoreForAtomicReadAndNonAtomicWrite = dispatch_semaphore_create(1);
+	}
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	dispatch_release(_semaphoreForAtomic);
+	dispatch_release(_semaphoreForAtomicReadAndNonAtomicWrite);
+}
 
 - (void)setValueForReplaceByAtomic:(struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
+	dispatch_semaphore_wait(_semaphoreForAtomic, DISPATCH_TIME_FOREVER);
+		
 	_valueForReplaceByAtomic = valueForReplaceByAtomic;
+
+	dispatch_semaphore_signal(_semaphoreForAtomic);
 }
 
 - (void)setValueForReplaceByNonAtomic:(struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -35,7 +60,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
-	return _valueForReplaceByAtomic;
+	struct EzSampleObjectStructValue result;
+	
+	dispatch_semaphore_wait(_semaphoreForAtomic, DISPATCH_TIME_FOREVER);
+	
+	result = _valueForReplaceByAtomic;
+	
+	dispatch_semaphore_signal(_semaphoreForAtomic);
+
+	return result;
 }
 
 - (struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -45,7 +78,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
 {
-	return _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	struct EzSampleObjectStructValue result;
+	
+	dispatch_semaphore_wait(_semaphoreForAtomicReadAndNonAtomicWrite, DISPATCH_TIME_FOREVER);
+	
+	result = _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	
+	dispatch_semaphore_signal(_semaphoreForAtomicReadAndNonAtomicWrite);
+	
+	return result;
 }
 
 - (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
@@ -92,7 +133,7 @@
 {
 	NSString* labelForAtomic = @"ATOMIC";
 	NSString* labelForNonAtomic = @"NONATOMIC";
-	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"R:ATOM-W:DIRECT"];
+	NSString* labelForAtomicReadAndNonAtomicWrite = @"R:ATOM-W:DIRECT";
 	
 	EzPostLog(@"");
 	
@@ -115,6 +156,8 @@
 		value.b = _loopCountOfValueForReplaceByNonAtomic;
 		
 		self.valueForReplaceByNonAtomic = value;
+		
+		[NSThread sleepForTimeInterval:EzSampleObjectCustomPropertiesWithSleepInterval];
 	}
 	
 	_threadForValueForReplaceByNonAtomic = nil;
@@ -136,6 +179,8 @@
 		value.b = _loopCountOfValueForReplaceByAtomic;
 		
 		self.valueForReplaceByAtomic = value;
+		
+		[NSThread sleepForTimeInterval:EzSampleObjectCustomPropertiesWithSleepInterval];
 	}
 	
 	_threadForValueForReplaceByAtomic = nil;
@@ -157,6 +202,8 @@
 		value.b = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
 		
 		_valueForReplaceByAtomicReadAndNonAtomicWrite = value;
+		
+		[NSThread sleepForTimeInterval:EzSampleObjectCustomPropertiesWithSleepInterval];
 	}
 	
 	_threadForValueForReplaceByAtomicReadAndNonAtomicWrite = nil;

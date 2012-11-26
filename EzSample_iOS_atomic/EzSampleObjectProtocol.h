@@ -30,7 +30,7 @@ struct EzSampleObjectStructValue
 - (void)start;		// 「値」の書き込みループを開始します。
 - (void)stop;		// 「値」の書き込みループを終了します。
 
-- (void)outputWithLabel:(NSString*)label;	// 「値」を参照し、矛盾があるかどうかをログに記録します。
-- (void)outputLoopCount;					// 「値」を書き込んだ回数の総計をレポートに記録します。
+- (void)output;				// 「値」を参照し、矛盾があるかどうかをログに記録します。
+- (void)outputLoopCount;	// 「値」を書き込んだ回数の総計をレポートに記録します。
 
 @end

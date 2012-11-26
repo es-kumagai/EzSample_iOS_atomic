@@ -22,6 +22,9 @@
 
 @property (atomic,readonly) BOOL isCanceled;
 
+@property (atomic,readwrite,copy) NSDate* startTime;
+@property (atomic,readwrite,copy) NSDate* endTime;
+
 @property (nonatomic,readonly,strong) IBOutlet EzSampleMenuTableViewController* menuTableViewController;
 
 - (void)clearOutputs;

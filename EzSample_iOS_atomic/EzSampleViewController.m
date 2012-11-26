@@ -127,9 +127,12 @@
 	
 	while (!currentThread.isCancelled)
 	{
-		[self performSelectorOnMainThread:@selector(EzUpdateLog:) withObject:nil waitUntilDone:YES];
-		
-		[NSThread sleepForTimeInterval:0.10];
+		@autoreleasepool
+		{
+			[self performSelectorOnMainThread:@selector(EzUpdateLog:) withObject:nil waitUntilDone:YES];
+			
+			[NSThread sleepForTimeInterval:0.10];
+		}
 	}
 	
 	// キャンセル直後にもう一度、新着ログを表示しておきます。
@@ -146,7 +149,7 @@
 	
 	if (boolFull.boolValue)
 	{
-		NSArray* logs = [[_logBuffer reverseObjectEnumerator] allObjects];
+		NSArray* logs = _logBuffer.reverseObjectEnumerator.allObjects;
 		
 		text = [logs componentsJoinedByString:@"\n"];
 	}
@@ -204,14 +207,19 @@
 	
 	@try
 	{
+		self.startTime = [[NSDate alloc] init];
+		
 		while (!self.isCanceled && step-- != 0)
 		{
-			if (step % 100 == 0)
+			@autoreleasepool
 			{
-				EzPostProgress(EzSampleViewControllerTestStep - step);
+				if (step % 100 == 0)
+				{
+					EzPostProgress(EzSampleViewControllerTestStep - step);
+				}
+				
+				[testInstance output];
 			}
-			
-			[testInstance outputWithLabel:@""];
 		}
 		
 		EzPostMark;
@@ -230,6 +238,8 @@
 		EzPostMark;
 		EzPostLog(@"The check thread aborted because %@.", exception.reason);
 	}
+	
+	self.endTime = [[NSDate alloc] init];
 
 	// 終了処理に時間がかかることを伝えます。
 	EzPostLog(@"");
@@ -247,6 +257,8 @@
 		[NSThread sleepForTimeInterval:0.01];
 	}
 	
+	_updateLogThread = nil;
+	
 	// チェック完了処理を行います。
 	[self performSelectorOnMainThread:@selector(EzCheckDone:) withObject:testInstance waitUntilDone:NO];
 }
@@ -260,6 +272,13 @@
 	
 	// 最新のログとレポートを画面に表示します。
 	[self EzUpdateLog:[[NSNumber alloc] initWithBool:YES]];
+	
+	NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+	
+	dateFormatter.dateFormat = @"mm:ss";
+	
+	EzPostReport(@"Time: %@ - %@ (%.2f)", [dateFormatter stringFromDate:self.startTime], [dateFormatter stringFromDate:self.endTime], [self.endTime timeIntervalSinceDate:self.startTime]);
+
 	[testInstance outputLoopCount];
 	
 	[self.menuTableViewController.tableView flashScrollIndicators];

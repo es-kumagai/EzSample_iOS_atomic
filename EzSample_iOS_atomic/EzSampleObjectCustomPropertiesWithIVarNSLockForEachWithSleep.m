@@ -6,9 +6,11 @@
 //  Copyright (c) 平成24年 Tomohiro Kumagai. All rights reserved.
 //
 
-#import "EzSampleObjectCustomProperties.h"
+#import "EzSampleObjectCustomPropertiesWithIVarNSLockForEachWithSleep.h"
 
-@interface EzSampleObjectCustomProperties ()
+#define EzSampleObjectCustomPropertiesWithSleepInterval 0.0000001
+
+@interface EzSampleObjectCustomPropertiesWithIVarNSLockForEachWithSleep ()
 
 - (void)EzThreadLoopForValueForReplaceByNonAtomic:(id)object;
 - (void)EzThreadLoopForValueForReplaceByAtomic:(id)object;
@@ -16,11 +18,28 @@
 
 @end
 
-@implementation EzSampleObjectCustomProperties
+@implementation EzSampleObjectCustomPropertiesWithIVarNSLockForEachWithSleep
+
+- (id)init
+{
+	self = [super init];
+	
+	if (self)
+	{
+		_lockForAtomic = [[NSLock alloc] init];
+		_lockForAtomicReadAndNonAtomicWrite = [[NSLock alloc] init];
+	}
+	
+	return self;
+}
 
 - (void)setValueForReplaceByAtomic:(struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
+	[_lockForAtomic lock];
+	
 	_valueForReplaceByAtomic = valueForReplaceByAtomic;
+
+	[_lockForAtomic unlock];
 }
 
 - (void)setValueForReplaceByNonAtomic:(struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -35,7 +54,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomic
 {
-	return _valueForReplaceByAtomic;
+	struct EzSampleObjectStructValue result;
+	
+	[_lockForAtomic lock];
+
+	result = _valueForReplaceByAtomic;
+	
+	[_lockForAtomic unlock];
+
+	return result;
 }
 
 - (struct EzSampleObjectStructValue)valueForReplaceByNonAtomic
@@ -45,7 +72,15 @@
 
 - (struct EzSampleObjectStructValue)valueForReplaceByAtomicReadAndNonAtomicWrite
 {
-	return _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	struct EzSampleObjectStructValue result;
+	
+	[_lockForAtomicReadAndNonAtomicWrite lock];
+	
+	result = _valueForReplaceByAtomicReadAndNonAtomicWrite;
+	
+	[_lockForAtomicReadAndNonAtomicWrite unlock];
+	
+	return result;
 }
 
 - (BOOL)outputStructState:(struct EzSampleObjectStructValue)value withLabel:(NSString*)label
@@ -92,7 +127,7 @@
 {
 	NSString* labelForAtomic = @"ATOMIC";
 	NSString* labelForNonAtomic = @"NONATOMIC";
-	NSString* labelForAtomicReadAndNonAtomicWrite = [[NSString alloc] initWithFormat:@"R:ATOM-W:DIRECT"];
+	NSString* labelForAtomicReadAndNonAtomicWrite = @"R:ATOM-W:DIRECT";
 	
 	EzPostLog(@"");
 	
@@ -115,6 +150,8 @@
 		value.b = _loopCountOfValueForReplaceByNonAtomic;
 		
 		self.valueForReplaceByNonAtomic = value;
+		
+		[NSThread sleepForTimeInterval:EzSampleObjectCustomPropertiesWithSleepInterval];
 	}
 	
 	_threadForValueForReplaceByNonAtomic = nil;
@@ -136,6 +173,8 @@
 		value.b = _loopCountOfValueForReplaceByAtomic;
 		
 		self.valueForReplaceByAtomic = value;
+		
+		[NSThread sleepForTimeInterval:EzSampleObjectCustomPropertiesWithSleepInterval];
 	}
 	
 	_threadForValueForReplaceByAtomic = nil;
@@ -157,6 +196,8 @@
 		value.b = _loopCountOfValueForReplaceByAtomicReadAndNonAtomicWrite;
 		
 		_valueForReplaceByAtomicReadAndNonAtomicWrite = value;
+		
+		[NSThread sleepForTimeInterval:EzSampleObjectCustomPropertiesWithSleepInterval];
 	}
 	
 	_threadForValueForReplaceByAtomicReadAndNonAtomicWrite = nil;
