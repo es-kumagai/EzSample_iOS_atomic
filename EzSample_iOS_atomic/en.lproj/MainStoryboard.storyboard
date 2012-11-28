@@ -124,33 +124,6 @@
             </objects>
         </scene>
     </scenes>
-    <classes>
-        <class className="EzSampleMenuTableViewCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/EzSampleMenuTableViewCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="descriptionLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="numberLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="testClassNameLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="EzSampleMenuTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/EzSampleMenuTableViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="delegate"/>
-            </relationships>
-        </class>
-        <class className="EzSampleViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/EzSampleViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancelTest:"/>
-                <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="logTextView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="menuTableViewController" candidateClass="EzSampleMenuTableViewController"/>
-                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
-                <relationship kind="outlet" name="reportTextView" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

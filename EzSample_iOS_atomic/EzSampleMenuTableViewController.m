@@ -54,6 +54,10 @@
 	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleClassAssignCustomWithARC" description:@"Test Instance variables of Objective-C Class with ARC with Assign Property Atomicity with Custom implements with @synchronized (self)."]];
 	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleClassWeakCustom" description:@"Test Instance variables of Objective-C Class with Weak Property Atomicity with Custom implements with common NSLock."]];
 
+	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep" description:@"Test Struct with Property Atomicity with Custom Implements without sleep in loop with a single pthread mutex."]];
+	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally" description:@"Test Struct with Property Atomicity with Custom Implements without sleep in loop with a single pthread mutex and try-finally."]];
+	[items addObject:[[EzSampleMenuTableItem alloc] initWithTestClassName:@"EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock" description:@"Test Struct with Property Atomicity with Custom Implements with common NSRecursiveLock in ivar."]];
+
 	_items = [items copy];
 }
 

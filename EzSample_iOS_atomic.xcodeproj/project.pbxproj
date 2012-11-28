@@ -12,6 +12,9 @@
 		B19A75F5165E1C7400DFEC5D /* EzSampleMenuTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B19A75F4165E1C7400DFEC5D /* EzSampleMenuTableItem.m */; };
 		B19A75F8165E1EEA00DFEC5D /* EzSampleMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B19A75F7165E1EE900DFEC5D /* EzSampleMenuTableViewCell.m */; };
 		B19A75FB165E578D00DFEC5D /* EzSampleClassNonARC.m in Sources */ = {isa = PBXBuildFile; fileRef = B19A75FA165E578C00DFEC5D /* EzSampleClassNonARC.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B1A08D9C1664646C0029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A08D9B1664646C0029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep.m */; };
+		B1A08DA0166479B00029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A08D9F166479B00029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally.m */; };
+		B1A08DE11664D4DD0029399F /* EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A08DE01664D4DD0029399F /* EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock.m */; };
 		B1A2D73D165F9490000DE6DE /* EzSampleClassAssign.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A2D73A165F9490000DE6DE /* EzSampleClassAssign.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B1A2D73E165F9490000DE6DE /* EzSampleClassWeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A2D73C165F9490000DE6DE /* EzSampleClassWeak.m */; };
 		B1A54F7516633A89008D5741 /* EzSampleObjectCustomPropertiesWithIVarSynchronizedForEach.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A54F7416633A89008D5741 /* EzSampleObjectCustomPropertiesWithIVarSynchronizedForEach.m */; };
@@ -63,6 +66,12 @@
 		B19A75F7165E1EE900DFEC5D /* EzSampleMenuTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleMenuTableViewCell.m; sourceTree = "<group>"; };
 		B19A75F9165E578C00DFEC5D /* EzSampleClassNonARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleClassNonARC.h; sourceTree = "<group>"; };
 		B19A75FA165E578C00DFEC5D /* EzSampleClassNonARC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleClassNonARC.m; sourceTree = "<group>"; };
+		B1A08D9A1664646C0029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep.h; sourceTree = "<group>"; };
+		B1A08D9B1664646C0029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep.m; sourceTree = "<group>"; };
+		B1A08D9E166479B00029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally.h; sourceTree = "<group>"; };
+		B1A08D9F166479B00029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally.m; sourceTree = "<group>"; };
+		B1A08DDF1664D4DD0029399F /* EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock.h; sourceTree = "<group>"; };
+		B1A08DE01664D4DD0029399F /* EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock.m; sourceTree = "<group>"; };
 		B1A2D739165F9490000DE6DE /* EzSampleClassAssign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleClassAssign.h; sourceTree = "<group>"; };
 		B1A2D73A165F9490000DE6DE /* EzSampleClassAssign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EzSampleClassAssign.m; sourceTree = "<group>"; };
 		B1A2D73B165F9490000DE6DE /* EzSampleClassWeak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EzSampleClassWeak.h; sourceTree = "<group>"; };
@@ -219,6 +228,12 @@
 				B1A54F8016634CD3008D5741 /* EzSampleObjectCustomPropertiesWithIVarSemaphoreForEachWithSleep.m */,
 				B1A54F831663554E008D5741 /* EzSampleObjectCustomPropertiesWithIVarSingleSemaphoreWithoutSleep.h */,
 				B1A54F841663554E008D5741 /* EzSampleObjectCustomPropertiesWithIVarSingleSemaphoreWithoutSleep.m */,
+				B1A08D9A1664646C0029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep.h */,
+				B1A08D9B1664646C0029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep.m */,
+				B1A08D9E166479B00029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally.h */,
+				B1A08D9F166479B00029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally.m */,
+				B1A08DDF1664D4DD0029399F /* EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock.h */,
+				B1A08DE01664D4DD0029399F /* EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock.m */,
 				B1A85A5D165D00A60041F46B /* EzSampleLongLong.h */,
 				B1A85A5E165D00A60041F46B /* EzSampleLongLong.m */,
 				B1A85A60165D0C2F0041F46B /* EzSampleLongLongOverrideAtomicGetter.h */,
@@ -367,6 +382,9 @@
 				B1A54F8116634CD4008D5741 /* EzSampleObjectCustomPropertiesWithIVarSemaphoreForEachWithoutSleep.m in Sources */,
 				B1A54F8216634CD4008D5741 /* EzSampleObjectCustomPropertiesWithIVarSemaphoreForEachWithSleep.m in Sources */,
 				B1A54F851663554F008D5741 /* EzSampleObjectCustomPropertiesWithIVarSingleSemaphoreWithoutSleep.m in Sources */,
+				B1A08D9C1664646C0029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleep.m in Sources */,
+				B1A08DA0166479B00029399F /* EzSampleObjectCustomPropertiesWithIVarSingleMutexWithoutSleepWithTryFinally.m in Sources */,
+				B1A08DE11664D4DD0029399F /* EzSampleObjectCustomPropertiesWithIVarNSRecursiveLock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
